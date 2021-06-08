@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 set(CMAKE_CXX_STANDARD 17)
 
-project(PrEWRunExample) # Project name
+project(PrEWMultiSetupTest) # Project name
 
 # Find necessary external libraries
 find_library( 
@@ -46,7 +46,7 @@ add_definitions( ${ROOT_DEFINITIONS} )
 set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR})
 
 # Package name and version
-set(CPACK_PACKAGE_NAME "PrEWRunExample")
+set(CPACK_PACKAGE_NAME "PrEWMultiSetupTest")
 set(CPACK_PACKAGE_VERSION "1.0.0")
 
 # Name of binary

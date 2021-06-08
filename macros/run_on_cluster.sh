@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # -------------------------------------------------#
-# Bash script for run the compiled PrEWRunExample 
+# Bash script for run the compiled PrEWMultiSetupTest 
 # executable.
 # -------------------------------------------------#
 
@@ -31,7 +31,7 @@ case $i in
   
   -h|--help|-H)
     echo ""
-    echo "Macro to run the PrEWRunExample executable"
+    echo "Macro to run the PrEWMultiSetupTest executable"
     echo "${USAGE}"
     echo ""
     echo "Arguments:"
@@ -66,7 +66,7 @@ fi
 
 # -------------------------------------------------#
 # Check if compilation necessary / requested
-executable_path="${home_folder}/bin/PrEWRunExample"
+executable_path="${home_folder}/bin/PrEWMultiSetupTest"
 recompile=false
 
 if [ -f "${executable_path}" ]; then
@@ -87,7 +87,7 @@ if [ "${recompile}" = true ]; then
   run_command="${run_command} \&\& ${home_folder}/macros/compile.sh --rebuild"
 fi
 
-run_command="${run_command} \&\& cd ${home_folder}/bin \&\& ./PrEWRunExample"
+run_command="${run_command} \&\& cd ${home_folder}/bin \&\& ./PrEWMultiSetupTest"
 
 # -------------------------------------------------#
 # Determine additional HTCondor steering parameters
@@ -116,7 +116,13 @@ echo "Job output can be found in ${condor_out_dir}"
 
 echo "Waiting for job to finish."
 job_log_path=$(ls ${condor_out_dir}/${condor_job_ID}*.log)
-wait_output=$(condor_wait ${job_log_path}) # Write into variable to suppress spammy output
+
+# Timeout after 15 seconds to restart command, else it gets stuck sometimes.
+status=124 # Start with error code to get into loop
+while [ $status -eq 124 ]; do
+  wait_output=$(timeout 15 condor_wait ${job_log_path}) # Write into variable to suppress spammy output
+  status=$? # Update status -> 124 means timeout, else success
+done
 echo "Job finished!"
 
 # -------------------------------------------------#

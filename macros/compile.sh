@@ -24,7 +24,7 @@ case $i in
   ;;
   -h|--help|-H)
     echo ""
-    echo "Macro to compile the PrEWRun source code"
+    echo "Macro to compile the PrEWMultiSetupTest source code"
     echo "${USAGE}"
     echo ""
     echo "Arguments:"

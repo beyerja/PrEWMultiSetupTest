@@ -15,4 +15,7 @@ log                 = ../../output/Condor_output/$(Cluster).$(Process).log
 # Request six hours of runtime
 +RequestRuntime = 6*3600
 
+# Specify the operating system
+Requirements = ( OpSysAndVer == "CentOS7" ) 
+
 queue

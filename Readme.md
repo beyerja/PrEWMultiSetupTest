@@ -1,4 +1,4 @@
-# PrEWRunExample - Fitting example for PrEW
+# PrEWMultiSetupTest - Testing a large number of setups with PrEW
 
 Script to perform a `PrEW` fit using the `PrEWUtils` library.
 
@@ -22,9 +22,9 @@ Script to perform a `PrEW` fit using the `PrEWUtils` library.
 
 The code can be easily run after compilation:
 ```sh
-cd bin && ./PrEWRunExample && cd ..
+cd bin && ./PrEWMultiSetupTest && cd ..
 ```
-This will produce an output file in the `output` directory.
+This will produce output files in the `output` directory.
 It is a plain text file that stores some information about the results of the fits
 
 
@@ -39,24 +39,10 @@ With the ```--cpus=n_cpus``` the number of cpus used on the BIRD cluster can be 
 
 ### The source code
 
-The source code is in `source/main.cpp`.
+The main configuration and source code is in `source/main.cpp`.
+Details on the configurations are in the `.h` files in the `source` directory.
 
 It uses the necessary `PrEW` classes and the interfaces provided by `PrEWUtils` to be as clear as manageable.
 (This may not always have worked out.)
 
 For open questions please consult the `PrEW` and `PrEWUtils` source code or open an issue on the GitHub page.
-
-## Interpreting the output
-
-A jupyter (python) notebook is provided to interpret the output of the toy fits.
-It sits in the `notebook` directory and can be opened using
-```sh
-cd notebook && jupyter notebook ResultNotebook.ipynb && cd ..
-```
-and will produce histograms in the `output` directory.
-
-The notebook can also be run without opening a browser window using
-```sh
-cd notebook && jupyter nbconvert --to notebook --inplace --execute ResultNotebook.ipynb
-```
-Text outputs (which would normally be visible in the browser window) can be found in the `ResultNotebook.ipynb` file.
