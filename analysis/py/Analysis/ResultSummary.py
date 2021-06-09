@@ -10,7 +10,6 @@ class ResultSummary:
   """
   
   def __init__(self, run_result):
-    result_vals = np.array([fr.pars_fin for fr in run_result.fit_results])    
     self.par_names = run_result.par_names
     
     # Parameter result range related things
@@ -20,6 +19,7 @@ class ResultSummary:
     self.par_max = np.amax(self.par_vals, axis=0)
     
     # Covariance matrix related things
+    result_vals = np.array([fr.pars_fin for fr in run_result.fit_results])    
     self.cov_mat = ACMC.calc_cov_mat(result_vals)
     self.cor_mat = ACMC.calc_cor_mat(self.cov_mat)
     self.unc_vec = ACMC.calc_std_dev(self.cov_mat)
@@ -49,9 +49,25 @@ class ResultSummary:
       log.debug("Own calc: {}".format(self.unc_vec))
       log.debug("Fit calc: {}".format(self.fit_unc_avg))
       
-      
-  # TODO TODO TODO
-  # Make this directly writable so it can be written to a summary text file for each access
-  # TODO: Leave out par vals
-  # TODO: Summarize nll, cov_status, min_status, fct_calls, n_iters
-  # TODO TODO TODO
+  def __str__(self):
+    """ Make this class printable.
+    """
+    np.set_printoptions(linewidth=999999) # Avoid extra line breaks
+    out =  "Par. names  : {}\n".format(self.par_names)
+    out += "Par. results: {}\n".format(self.par_avg)
+    out += "Calc.    unc: {}\n".format(self.unc_vec)
+    out += "Avg. fit unc: {}\n".format(self.fit_unc_avg)
+    out += "Cor.mat.:\n{}\n".format(self.cor_mat)
+    
+    out += "Avg. NLL/ndf: {}\n".format(np.average(self.nll)/self.ndf)
+    out += "Cov. status: "
+    for status in np.arange(-1,4):
+      out +="{}: {}, ".format(status,(self.cov_status == status).sum())
+    out += "\n"
+    out += "Min. status: "
+    for status in np.arange(-1,7):
+      out +="{}: {}, ".format(status,(self.min_status == status).sum())
+    out += "\n"
+    out += "Avg. fct. calls: {}".format(np.average(self.fct_calls))
+    np.set_printoptions(linewidth=75) # Reset to default
+    return out
