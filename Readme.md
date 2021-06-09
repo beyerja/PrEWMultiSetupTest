@@ -46,3 +46,7 @@ It uses the necessary `PrEW` classes and the interfaces provided by `PrEWUtils` 
 (This may not always have worked out.)
 
 For open questions please consult the `PrEW` and `PrEWUtils` source code or open an issue on the GitHub page.
+
+## Analysis
+
+For the python code that interprets the output of the `PrEW` runs, please see the `analysis` folder and the readme therein.
