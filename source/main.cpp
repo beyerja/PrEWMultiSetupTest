@@ -40,12 +40,18 @@ int main(int /*argc*/, char ** /*argv*/) {
   using RunInfoFnc = std::function<PrEWUtils::SetupHelp::RunInfo(int, double)>;
   std::map<std::string, RunInfoFnc> run_fncs {
     {"2pol_LPcnstr", RunInfos::setup_2pol_LPcnstr},
-    {"1pol_LPcnstr", RunInfos::setup_1pol_LPcnstr},
-    {"0pol_LPcnstr", RunInfos::setup_0pol_LPcnstr},
     {"2pol_LPfixed", RunInfos::setup_2pol_LPfixed},
+    {"2pol_Lconstr_Pfixed", RunInfos::setup_2pol_Lconstr_Pfixed},
+    {"1pol_LPcnstr", RunInfos::setup_1pol_LPcnstr},
     {"1pol_LPfixed", RunInfos::setup_1pol_LPfixed},
-    {"0pol_LPfixed", RunInfos::setup_0pol_LPfixed}
+    {"1pol_Lconstr_Pfixed", RunInfos::setup_1pol_Lconstr_Pfixed},
+    {"1pol_LPcnstr_P0fixed", RunInfos::setup_1pol_LPcnstr_P0fixed},
+    {"0pol_LPcnstr", RunInfos::setup_0pol_LPcnstr},
+    {"0pol_LPfixed", RunInfos::setup_0pol_LPfixed},
+    {"0pol_Lconstr_P0fixed", RunInfos::setup_0pol_Lconstr_P0fixed}
   };
+  
+  
   
   std::map<std::string, bool> mu_acc_fixed {{"MuAccFree", false},
                                             {"MuAccFixd", true}};
@@ -141,6 +147,6 @@ int main(int /*argc*/, char ** /*argv*/) {
       }   // Loop muon acceptance
     }     // Loop luminosities
   }       // Loop run setups
+  spdlog::info("All tests done!");
 }
 
-spdlog::info("All tests done!");
