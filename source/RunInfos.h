@@ -8,7 +8,7 @@ using namespace PrEWUtils::SetupHelp;
 
 namespace RunInfos {
   
-const double rel_L_constr = 2.5e-3;
+const double rel_L_constr = 3.0e-3;
 const double rel_P_constr = 2.5e-3;
 const double abs_P_constr = 2.5e-3;
 

@@ -94,15 +94,15 @@ inline DifermionPars ILC_constr_Zpole(DifermionPars dif_par,
   if (par_name == "s0") {
     throw std::invalid_argument("ILC s0 constraint depends on lumimeter.");
   } else if (par_name == "Ae") {
-    dif_par = dif_par.constr_Ae(dif_par.Ae_val, 0.0006);
+    dif_par = dif_par.constr_Ae(dif_par.Ae_val, 0.0008);
   } else if (par_name == "Af") {
-    dif_par = dif_par.constr_Af(dif_par.Af_val, 0.00038);
+    dif_par = dif_par.constr_Af(dif_par.Af_val, 0.0008);
   } else if (par_name == "ef") {
-    dif_par = dif_par.constr_ef(dif_par.ef_val, 0.0007);
+    dif_par = dif_par.constr_ef(dif_par.ef_val, 0.0014);
   } else if (par_name == "kL") {
-    dif_par = dif_par.constr_kL(dif_par.kL_val, 0.0006);
+    dif_par = dif_par.constr_kL(dif_par.kL_val, 0.0013);
   } else if (par_name == "kR") {
-    dif_par = dif_par.constr_kR(dif_par.kR_val, 0.0007);
+    dif_par = dif_par.constr_kR(dif_par.kR_val, 0.0016);
   } else {
     throw std::invalid_argument(par_name + " isn't valid 2f parameter.");
   }
@@ -115,15 +115,15 @@ inline DifermionPars ILC_constr_HighQ2(DifermionPars dif_par,
   if (par_name == "s0") {
     throw std::invalid_argument("ILC s0 constraint depends on lumimeter.");
   } else if (par_name == "Ae") {
-    dif_par = dif_par.constr_Ae(dif_par.Ae_val, 0.0006);
+    dif_par = dif_par.constr_Ae(dif_par.Ae_val, 0.0008);
   } else if (par_name == "Af") {
-    dif_par = dif_par.constr_Af(dif_par.Af_val, 0.00026);
+    dif_par = dif_par.constr_Af(dif_par.Af_val, 0.0006);
   } else if (par_name == "ef") {
-    dif_par = dif_par.constr_ef(dif_par.ef_val, 0.00045);
+    dif_par = dif_par.constr_ef(dif_par.ef_val, 0.0010);
   } else if (par_name == "kL") {
-    dif_par = dif_par.constr_kL(dif_par.kL_val, 0.00042);
+    dif_par = dif_par.constr_kL(dif_par.kL_val, 0.0010);
   } else if (par_name == "kR") {
-    dif_par = dif_par.constr_kR(dif_par.kR_val, 0.00049);
+    dif_par = dif_par.constr_kR(dif_par.kR_val, 0.0011);
   } else {
     throw std::invalid_argument(par_name + " isn't valid 2f parameter.");
   }
