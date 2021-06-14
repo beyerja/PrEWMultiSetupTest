@@ -15,7 +15,11 @@ default_run_setups = [
   IORS.RunSetup("0pol_LPcnstr",  0,  0, "constrained", "constrained"),
   IORS.RunSetup("2pol_LPfixed", 80, 30, "fixed", "fixed"),
   IORS.RunSetup("1pol_LPfixed", 80,  0, "fixed", "fixed"),
-  IORS.RunSetup("0pol_LPfixed",  0,  0, "fixed", "fixed")
+  IORS.RunSetup("0pol_LPfixed",  0,  0, "fixed", "fixed"),
+  IORS.RunSetup("2pol_Lconstr_Pfixed", 80, 30, "constrained", "fixed"),
+  IORS.RunSetup("1pol_Lconstr_Pfixed", 80,  0, "constrained", "fixed"),
+  IORS.RunSetup("1pol_LPcnstr_P0fixed", 80,  0, "constrained", "constrained, P0 fixed"),
+  IORS.RunSetup("0pol_Lconstr_P0fixed",  0,  0, "constrained", "fixed")
 ]
 
 default_muacc_setups = [
