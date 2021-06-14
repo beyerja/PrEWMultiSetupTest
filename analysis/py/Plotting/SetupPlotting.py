@@ -46,14 +46,14 @@ def plot_parameters(res_summary, output_dir, extensions=["pdf","png"]):
   """ Create the summary plots for the all individual parameters.
   """
   n_pars = len(res_summary.par_names)
-  for extension in extensions:
-    IOSH.create_dir("{}/{}".format(output_dir,extension))
+  for ext in extensions:
+    IOSH.create_dir("{}/{}".format(output_dir,ext))
     
   for p in range(n_pars):
     fig, ax = plt.subplots(figsize=(8, 6.5),tight_layout=True)
     plot_parameter(ax,res_summary,p)
-    for extension in extensions:
-      fig.savefig("{}/{}/hist_{}.pdf".format(output_dir,extension,res_summary.par_names[p]))
+    for ext in extensions:
+      fig.savefig("{}/{}/hist_{}.{}".format(output_dir,ext,res_summary.par_names[p],ext))
     plt.close(fig)
     
 def plot_cor_matrix(res_summary, output_dir, extensions=["pdf","png"]):
@@ -82,8 +82,8 @@ def plot_cor_matrix(res_summary, output_dir, extensions=["pdf","png"]):
 
   ax.set_title("Average correlation matrix")
   fig.tight_layout()
-  for extension in extensions:
-    fig.savefig("{}/{}/hist_cor.pdf".format(output_dir,extension))
+  for ext in extensions:
+    fig.savefig("{}/{}/hist_cor.{}".format(output_dir,ext,ext))
   plt.close(fig)
   
 
@@ -121,8 +121,8 @@ def plot_nll_ndf(res_summary, output_dir, extensions=["pdf","png"]):
   ndof_str = r"$ndf$ = " + str(ndf)
   ax.legend(title=ndof_str)
 
-  for extension in extensions:
-    fig.savefig("{}/{}/hist_nll_ndf.pdf".format(output_dir,extension))
+  for ext in extensions:
+    fig.savefig("{}/{}/hist_nll_ndf.{}".format(output_dir,ext,ext))
   plt.close(fig)
   
 def plot_cov_status(res_summary, output_dir, extensions=["pdf","png"]):
@@ -144,8 +144,8 @@ def plot_cov_status(res_summary, output_dir, extensions=["pdf","png"]):
   # Rotate the tick labels and set their alignment.
   plt.setp(ax.get_xticklabels(), rotation=45, ha="right", rotation_mode="anchor")
 
-  for extension in extensions:
-    fig.savefig("{}/{}/hist_cov_status.pdf".format(output_dir,extension))
+  for ext in extensions:
+    fig.savefig("{}/{}/hist_cov_status.{}".format(output_dir,ext,ext))
   plt.close(fig)
   
 def plot_min_status(res_summary, output_dir, extensions=["pdf","png"]):
@@ -166,8 +166,8 @@ def plot_min_status(res_summary, output_dir, extensions=["pdf","png"]):
   # Rotate the tick labels and set their alignment.
   plt.setp(ax.get_xticklabels(), rotation=45, ha="right", rotation_mode="anchor")
 
-  for extension in extensions:
-    fig.savefig("{}/{}/hist_min_status.pdf".format(output_dir,extension))
+  for ext in extensions:
+    fig.savefig("{}/{}/hist_min_status.{}".format(output_dir,ext,ext))
   plt.close(fig)
   
 def plot_fit_calls(res_summary, output_dir, extensions=["pdf","png"]):
@@ -184,8 +184,8 @@ def plot_fit_calls(res_summary, output_dir, extensions=["pdf","png"]):
   # Add a legend 
   ax.legend()
 
-  for extension in extensions:
-    fig.savefig("{}/{}/hist_n_stats.pdf".format(output_dir,extension))
+  for ext in extensions:
+    fig.savefig("{}/{}/hist_n_stats.{}".format(output_dir,ext,ext))
   plt.close(fig)
   
 def plot_res_summary(res_summary, output_dir, extensions=["pdf","png"]):
