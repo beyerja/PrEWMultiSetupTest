@@ -12,4 +12,11 @@ class SetupResult:
     self.run_setup = run_setup
     self.muacc_setup = muacc_setup
     self.difparam_setup = difparam_setup
-  
+    
+  def equals(self, lumi, run_name, muacc_name, difparam_name):
+    """ Is this result described by the given ID's for all the setup options.
+    """
+    return (self.lumi_setup == lumi) and\
+           (self.run_setup.name == run_name) and\
+           (self.muacc_setup.name == muacc_name) and\
+           (self.difparam_setup.name == difparam_name)
