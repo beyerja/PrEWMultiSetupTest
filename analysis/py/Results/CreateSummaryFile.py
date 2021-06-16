@@ -1,6 +1,8 @@
 import logging as log
+import sys
 
 # Local modules
+sys.path.append("..") # Use the modules in the top level directory
 import Analysis.ResultSummary as ARS
 import IO.MultiResultReader as IOMRR
 import IO.NamingConventions as IONC
