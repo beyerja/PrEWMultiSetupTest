@@ -64,6 +64,11 @@ class ResultSummary:
     """
     return self.unc_vec[self.par_index(par_name)]
       
+  def fit_unc(self, par_name):
+    """ Return the uncertainty for the given parameter.
+    """
+    return self.fit_unc_avg[self.par_index(par_name)]
+      
   def __str__(self):
     """ Make this class printable.
     """
