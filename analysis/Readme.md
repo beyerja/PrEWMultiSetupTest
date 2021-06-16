@@ -2,6 +2,8 @@
 
 The Python code contained in `py` can be used to analyse the output from the multi-setup test.
 
+Concrete tests to run are place in the `py/Results` directory.
+
 ### Framework basics
 
 The `MultiResultReader` in the `IO` folder reads the different setups.
