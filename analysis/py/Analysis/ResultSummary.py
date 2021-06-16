@@ -10,7 +10,7 @@ class ResultSummary:
   """
   
   def __init__(self, run_result):
-    self.par_names = run_result.par_names
+    self.par_names = np.array(run_result.par_names)
     
     # Parameter result range related things
     self.par_vals = np.array([fr.pars_fin for fr in run_result.fit_results])
@@ -48,6 +48,21 @@ class ResultSummary:
       log.debug("Calculated uncertainty deviates more than {}% from the one that the fit calculated.".format(rel_tolerance*100))
       log.debug("Own calc: {}".format(self.unc_vec))
       log.debug("Fit calc: {}".format(self.fit_unc_avg))
+      
+  def par_index(self, par_name):
+    """ Return the index of the given parameter.
+    """  
+    indices = np.where(self.par_names == par_name)[0]
+    if len(indices) == 0:
+      raise Exception("No parameter {} found.".format(par_name))
+    elif len(indices) > 1:
+      raise Exception("{} parmeters {} found.".format(par_name))
+    return indices[0]
+    
+  def unc(self, par_name):
+    """ Return the uncertainty for the given parameter.
+    """
+    return self.unc_vec[self.par_index(par_name)]
       
   def __str__(self):
     """ Make this class printable.
