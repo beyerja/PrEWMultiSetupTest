@@ -3,6 +3,8 @@ import IO.SysHelp as IOSH
 IOSH.find_PrOut()
 import PrOut
 
+import Analysis.ResultSummary as ARS
+
 class SetupResult:
   """ Class that stores the results and metadata of a single fit setup.
   """
@@ -20,3 +22,8 @@ class SetupResult:
            (self.run_setup.name == run_name) and\
            (self.muacc_setup.name == muacc_name) and\
            (self.difparam_setup.name == difparam_name)
+           
+  def result_summary(self):
+    """ Get the result summary for this setup.
+    """
+    return ARS.ResultSummary(self.run_result)
