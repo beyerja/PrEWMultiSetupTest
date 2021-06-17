@@ -1,5 +1,6 @@
 import logging as log
 import sys
+from tqdm import tqdm
 
 # Local modules
 sys.path.append("..") # Use the modules in the top level directory
@@ -25,9 +26,10 @@ plot_base = "{}/plots".format(output_base)
 PDF.set_default_mpl_format()
 
 # Create summary plots for each result
-for res in msr.setup_results:
+log.info("Creating plots for each setup.")
+for res in tqdm(msr.setup_results):
   setup_out_name = IONC.setup_convention(res.lumi_setup, res.run_setup, res.muacc_setup, res.difparam_setup)
-  log.info("Checking: {}".format(setup_out_name))
+  log.debug("Checking: {}".format(setup_out_name))
   
   # Calculate a summary of the result (e.g. cor matrix, unc., ...)
   res_summary = ARS.ResultSummary(res.run_result)
