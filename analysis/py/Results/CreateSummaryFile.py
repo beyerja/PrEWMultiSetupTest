@@ -13,7 +13,8 @@ import IO.SysHelp as IOSH
 
 log.basicConfig(level=log.INFO) # Set logging level
 output_base = "../../../output"
-msr = IOMRR.MultiResultReader(output_base)
+fit_output_base = "{}/run_outputs".format(output_base)
+msr = IOMRR.MultiResultReader(fit_output_base)
 
 # Output directory
 summary_dir = "{}/summary".format(output_base)

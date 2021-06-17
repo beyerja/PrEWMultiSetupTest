@@ -63,11 +63,11 @@ else
 	mkdir "${home_folder}"/build
 fi
 
-if [ -d "${home_folder}"/output  ] ; then
+if [ -d "${home_folder}"/output/run_outputs  ] ; then
 	echo "Already have output directory"
 else 
   echo "Creating output directory"
-  mkdir "${home_folder}"/output
+  mkdir -p "${home_folder}"/output/run_outputs
 fi
 
 # -------------------------------------------------#

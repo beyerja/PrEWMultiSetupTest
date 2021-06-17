@@ -24,7 +24,7 @@ int main(int /*argc*/, char ** /*argv*/) {
   int n_toys = 300;
   std::string minuit_minimizers = "Combined(1000000,1000000,0.01)";
   std::string prew_minimizer = "PoissonNLL";
-  std::string output_base = "../output/fit_results";
+  std::string output_base = "../output/run_outputs/fit_results";
 
   std::vector<std::string> csv_input_files{
       "/nfs/dust/ilc/group/ild/beyerjac/TGCAnalysis/SampleProduction/"
