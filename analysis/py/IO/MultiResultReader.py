@@ -1,5 +1,6 @@
 import logging as log
 import numpy as np
+from tqdm import tqdm
 
 # Find and import the PrEW output reader
 import IO.SysHelp as IOSH
@@ -44,10 +45,11 @@ class MultiResultReader:
                difparam_setups = SDS.default_difparam_setups):
     self.setup_results = []
     
-    for lumi_setup in lumi_setups:
-      for run_setup in run_setups:
-        for muacc_setup in muacc_setups:
-          for difparam_setup in difparam_setups:
+    log.info("Reading in setup results.")
+    for lumi_setup in tqdm(lumi_setups):
+      for run_setup in tqdm(run_setups, leave=False):
+        for muacc_setup in tqdm(muacc_setups, leave=False):
+          for difparam_setup in tqdm(difparam_setups, leave=False):
             self.setup_results.append(
               find_setup_result(result_dir, lumi_setup, run_setup, muacc_setup, 
                                 difparam_setup))           
