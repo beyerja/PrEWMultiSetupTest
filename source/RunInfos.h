@@ -34,40 +34,21 @@ inline RunInfo setup_2pol_LPcnstr(int energy, double lumi) {
 }
 
 inline RunInfo setup_2pol_LPfixed(int energy, double lumi) {
-  PrEWUtils::SetupHelp::RunInfo run(energy);
-  run.set_lumi(lumi);
-  run.add_pol("ePol-", 0.8);
-  run.add_pol("ePol+", 0.8);
-  run.add_pol("pPol-", 0.3);
-  run.add_pol("pPol+", 0.3);
+  auto run = setup_2pol_LPcnstr(energy, lumi);
   run.fix_lumi();
   run.fix_pol("ePol-");
   run.fix_pol("ePol+");
   run.fix_pol("pPol-");
   run.fix_pol("pPol+");
-  run.add_pol_config("e-p+", "ePol-", "pPol+", "-", "+", 0.45);
-  run.add_pol_config("e+p-", "ePol+", "pPol-", "+", "-", 0.45);
-  run.add_pol_config("e-p-", "ePol-", "pPol-", "-", "-", 0.05);
-  run.add_pol_config("e+p+", "ePol+", "pPol+", "+", "+", 0.05);
   return run;
 }
 
 inline RunInfo setup_2pol_Lconstr_Pfixed(int energy, double lumi) {
-  PrEWUtils::SetupHelp::RunInfo run(energy);
-  run.set_lumi(lumi);
-  run.add_pol("ePol-", 0.8);
-  run.add_pol("ePol+", 0.8);
-  run.add_pol("pPol-", 0.3);
-  run.add_pol("pPol+", 0.3);
-  run.add_lumi_constr(lumi, lumi * rel_L_constr);
+  auto run = setup_2pol_LPcnstr(energy, lumi);
   run.fix_pol("ePol-");
   run.fix_pol("ePol+");
   run.fix_pol("pPol-");
   run.fix_pol("pPol+");
-  run.add_pol_config("e-p+", "ePol-", "pPol+", "-", "+", 0.45);
-  run.add_pol_config("e+p-", "ePol+", "pPol-", "+", "-", 0.45);
-  run.add_pol_config("e-p-", "ePol-", "pPol-", "-", "-", 0.05);
-  run.add_pol_config("e+p+", "ePol+", "pPol+", "+", "+", 0.05);
   return run;
 }
 
@@ -89,48 +70,26 @@ inline RunInfo setup_1pol_LPcnstr(int energy, double lumi) {
 }
 
 inline RunInfo setup_1pol_LPfixed(int energy, double lumi) {
-  PrEWUtils::SetupHelp::RunInfo run(energy);
-  run.set_lumi(lumi);
-  run.add_pol("ePol-", 0.8);
-  run.add_pol("ePol+", 0.8);
-  run.add_pol("pPol0", 0.0);
+  auto run = setup_1pol_LPcnstr(energy, lumi);
   run.fix_lumi();
   run.fix_pol("ePol-");
   run.fix_pol("ePol+");
   run.fix_pol("pPol0");
-  run.add_pol_config("e-p0", "ePol-", "pPol0", "-", "+", 0.5);
-  run.add_pol_config("e+p0", "ePol+", "pPol0", "+", "+", 0.5);
   return run;
 }
 
 inline RunInfo setup_1pol_Lconstr_Pfixed(int energy, double lumi) {
-  PrEWUtils::SetupHelp::RunInfo run(energy);
-  run.set_lumi(lumi);
-  run.add_pol("ePol-", 0.8);
-  run.add_pol("ePol+", 0.8);
-  run.add_pol("pPol0", 0.0);
-  run.add_lumi_constr(lumi, lumi * rel_L_constr);
+  auto run = setup_1pol_LPcnstr(energy, lumi);
   run.fix_pol("ePol-");
   run.fix_pol("ePol+");
   run.fix_pol("pPol0");
-  run.add_pol_config("e-p0", "ePol-", "pPol0", "-", "+", 0.5);
-  run.add_pol_config("e+p0", "ePol+", "pPol0", "+", "+", 0.5);
   return run;
 }
 
 
 inline RunInfo setup_1pol_LPcnstr_P0fixed(int energy, double lumi) {
-  PrEWUtils::SetupHelp::RunInfo run(energy);
-  run.set_lumi(lumi);
-  run.add_pol("ePol-", 0.8);
-  run.add_pol("ePol+", 0.8);
-  run.add_pol("pPol0", 0.0);
-  run.add_lumi_constr(lumi, lumi * rel_L_constr);
-  run.add_pol_constr("ePol-", 0.8, 0.8 * rel_P_constr);
-  run.add_pol_constr("ePol+", 0.8, 0.8 * rel_P_constr);
+  auto run = setup_1pol_LPcnstr(energy, lumi);
   run.fix_pol("pPol0");
-  run.add_pol_config("e-p0", "ePol-", "pPol0", "-", "+", 0.5);
-  run.add_pol_config("e+p0", "ePol+", "pPol0", "+", "+", 0.5);
   return run;
 }
 
@@ -149,26 +108,17 @@ inline RunInfo setup_0pol_LPcnstr(int energy, double lumi) {
 }
 
 inline RunInfo setup_0pol_LPfixed(int energy, double lumi) {
-  RunInfo run(energy);
-  run.set_lumi(lumi);
-  run.add_pol("ePol0", 0.0);
-  run.add_pol("pPol0", 0.0);
+  auto run = setup_0pol_LPcnstr(energy, lumi);
   run.fix_lumi();
   run.fix_pol("ePol0");
   run.fix_pol("pPol0");
-  run.add_pol_config("e0p0", "ePol0", "pPol0", "+", "+", 1.0);
   return run;
 }
 
 inline RunInfo setup_0pol_Lconstr_P0fixed(int energy, double lumi) {
-  RunInfo run(energy);
-  run.set_lumi(lumi);
-  run.add_pol("ePol0", 0.0);
-  run.add_pol("pPol0", 0.0);
-  run.add_lumi_constr(lumi, lumi * rel_L_constr);
+  auto run = setup_0pol_LPcnstr(energy, lumi);
   run.fix_pol("ePol0");
   run.fix_pol("pPol0");
-  run.add_pol_config("e0p0", "ePol0", "pPol0", "+", "+", 1.0);
   return run;
 }
 
