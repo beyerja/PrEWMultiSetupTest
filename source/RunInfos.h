@@ -53,6 +53,56 @@ inline RunInfo setup_2pol_Lconstr_Pfixed(int energy, double lumi) {
 }
 
 // -----------------------------------------------------------------------------
+// Extended scenarios with 2 beam polarisation and also using 0-polarisation
+
+inline RunInfo setup_2polExt_LPcnstr(int energy, double lumi) {
+  PrEWUtils::SetupHelp::RunInfo run(energy);
+  run.set_lumi(lumi);
+  run.add_pol("ePol-", 0.8);
+  run.add_pol("ePol+", 0.8);
+  run.add_pol("pPol-", 0.3);
+  run.add_pol("pPol+", 0.3);
+  run.add_pol("ePol0", 0.0);
+  run.add_pol("pPol0", 0.0);
+  run.add_lumi_constr(lumi, lumi * rel_L_constr);
+  run.add_pol_constr("ePol0", 0.0, abs_P_constr);
+  run.add_pol_constr("pPol0", 0.0, abs_P_constr);
+  run.add_pol_constr("ePol-", 0.8, 0.8 * rel_P_constr);
+  run.add_pol_constr("ePol+", 0.8, 0.8 * rel_P_constr);
+  run.add_pol_constr("pPol-", 0.3, 0.3 * rel_P_constr);
+  run.add_pol_constr("pPol+", 0.3, 0.3 * rel_P_constr);
+  run.add_pol_config("e-p+", "ePol-", "pPol+", "-", "+", 0.36);
+  run.add_pol_config("e+p-", "ePol+", "pPol-", "+", "-", 0.36);
+  run.add_pol_config("e-p-", "ePol-", "pPol-", "-", "-", 0.04);
+  run.add_pol_config("e+p+", "ePol+", "pPol+", "+", "+", 0.04);
+  run.add_pol_config("e0p-", "ePol0", "pPol-", "+", "-", 0.04);
+  run.add_pol_config("e0p+", "ePol0", "pPol+", "+", "+", 0.04);
+  run.add_pol_config("e-p0", "ePol-", "pPol0", "-", "+", 0.04);
+  run.add_pol_config("e+p0", "ePol+", "pPol0", "+", "+", 0.04);
+  run.add_pol_config("e0p0", "ePol0", "pPol0", "+", "+", 0.04);
+  return run;
+}
+
+inline RunInfo setup_2polExt_LPfixed(int energy, double lumi) {
+  auto run = setup_2polExt_LPcnstr(energy, lumi);
+  run.fix_lumi();
+  run.fix_pol("ePol-");
+  run.fix_pol("ePol+");
+  run.fix_pol("pPol-");
+  run.fix_pol("pPol+");
+  return run;
+}
+
+inline RunInfo setup_2polExt_Lconstr_Pfixed(int energy, double lumi) {
+  auto run = setup_2polExt_LPcnstr(energy, lumi);
+  run.fix_pol("ePol-");
+  run.fix_pol("ePol+");
+  run.fix_pol("pPol-");
+  run.fix_pol("pPol+");
+  return run;
+}
+
+// -----------------------------------------------------------------------------
 
 inline RunInfo setup_1pol_LPcnstr(int energy, double lumi) {
   PrEWUtils::SetupHelp::RunInfo run(energy);
