@@ -52,6 +52,12 @@ inline RunInfo setup_2pol_Lconstr_Pfixed(int energy, double lumi) {
   return run;
 }
 
+inline RunInfo setup_2pol_Lfixed_Pconstr(int energy, double lumi) {
+  auto run = setup_2pol_LPcnstr(energy, lumi);
+  run.fix_lumi();
+  return run;
+}
+
 // -----------------------------------------------------------------------------
 // Extended scenarios with 2 beam polarisation and also using 0-polarisation
 
@@ -102,6 +108,12 @@ inline RunInfo setup_2polExt_Lconstr_Pfixed(int energy, double lumi) {
   return run;
 }
 
+inline RunInfo setup_2polExt_Lfixed_Pconstr(int energy, double lumi) {
+  auto run = setup_2polExt_LPcnstr(energy, lumi);
+  run.fix_lumi();
+  return run;
+}
+
 // -----------------------------------------------------------------------------
 
 inline RunInfo setup_1pol_LPcnstr(int energy, double lumi) {
@@ -136,10 +148,15 @@ inline RunInfo setup_1pol_Lconstr_Pfixed(int energy, double lumi) {
   return run;
 }
 
-
 inline RunInfo setup_1pol_LPcnstr_P0fixed(int energy, double lumi) {
   auto run = setup_1pol_LPcnstr(energy, lumi);
   run.fix_pol("pPol0");
+  return run;
+}
+
+inline RunInfo setup_1pol_Lfixed_Pconstr(int energy, double lumi) {
+  auto run = setup_1pol_LPcnstr(energy, lumi);
+  run.fix_lumi();
   return run;
 }
 
@@ -169,6 +186,12 @@ inline RunInfo setup_0pol_Lconstr_P0fixed(int energy, double lumi) {
   auto run = setup_0pol_LPcnstr(energy, lumi);
   run.fix_pol("ePol0");
   run.fix_pol("pPol0");
+  return run;
+}
+
+inline RunInfo setup_0pol_Lfixed_P0constr(int energy, double lumi) {
+  auto run = setup_0pol_LPcnstr(energy, lumi);
+  run.fix_lumi();
   return run;
 }
 
