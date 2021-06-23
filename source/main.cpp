@@ -1,5 +1,5 @@
-#include "DifParPairs.h"
-#include "RunInfos.h"
+#include "Definitions/DifParPairs.h"
+#include "Definitions/RunInfos.h"
 
 // Includes from PrEW
 #include "GlobalVar/Chiral.h"
