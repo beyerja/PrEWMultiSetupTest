@@ -53,35 +53,6 @@ inline DifermionPars LEP_constr_Zpole(DifermionPars dif_par,
     dif_par = dif_par.constr_Ae(dif_par.Ae_val, 1.e-3);
   } else if (par_name == "Af") {
     dif_par = dif_par.constr_Af(dif_par.Af_val, 1.e-2);
-  } else if (par_name == "ef") {
-    dif_par = dif_par.constr_ef(dif_par.ef_val, 1.e-2);
-  } else if (par_name == "kL") {
-    dif_par = dif_par.constr_kL(dif_par.kL_val, 1.e-2);
-  } else if (par_name == "kR") {
-    dif_par = dif_par.constr_kR(dif_par.kR_val, 1.e-2);
-  } else {
-    throw std::invalid_argument(par_name + " isn't valid 2f parameter.");
-  }
-  return dif_par;
-}
-
-inline DifermionPars LEP_constr_HighQ2(DifermionPars dif_par,
-                                       const std::string &par_name) {
-  // LEP/SLC-like constraints at high energies
-  // -> No actual results (Except s0 and AFB at diverse energies)
-  // => Assume somewhat optimistic constraints
-  if (par_name == "s0") {
-    dif_par = dif_par.constr_s0(dif_par.s0_val, 1.e-2);
-  } else if (par_name == "Ae") {
-    dif_par = dif_par.constr_Ae(dif_par.Ae_val, 5.e-2);
-  } else if (par_name == "Af") {
-    dif_par = dif_par.constr_Af(dif_par.Af_val, 5.e-2);
-  } else if (par_name == "ef") {
-    dif_par = dif_par.constr_ef(dif_par.ef_val, 5.e-2);
-  } else if (par_name == "kL") {
-    dif_par = dif_par.constr_kL(dif_par.kL_val, 5.e-2);
-  } else if (par_name == "kR") {
-    dif_par = dif_par.constr_kR(dif_par.kR_val, 5.e-2);
   } else {
     throw std::invalid_argument(par_name + " isn't valid 2f parameter.");
   }
@@ -144,10 +115,9 @@ inline DifParPair dif_pars_fixed_ks() {
 inline DifParPair dif_pars_LEPconstr_Ae_Af_ef_ks() {
   auto mumu_ReturnToZ = default_ReturnToZ();
   auto mumu_HighQ2 = default_HighQ2();
-  std::vector<std::string> constr_pars{"Ae", "Af", "ef", "kL", "kR"};
+  std::vector<std::string> constr_pars{"Ae", "Af"};
   for (const auto &constr_par : constr_pars) {
     mumu_ReturnToZ = LEP_constr_Zpole(mumu_ReturnToZ, constr_par);
-    mumu_HighQ2 = LEP_constr_HighQ2(mumu_HighQ2, constr_par);
   }
   return std::make_pair(mumu_ReturnToZ, mumu_HighQ2);
 }
@@ -155,10 +125,9 @@ inline DifParPair dif_pars_LEPconstr_Ae_Af_ef_ks() {
 inline DifParPair dif_pars_LEPconstr_Ae_Af_ef_fixed_ks() {
   auto mumu_ReturnToZ = default_ReturnToZ().fix_kL().fix_kR();
   auto mumu_HighQ2 = default_HighQ2().fix_kL().fix_kR();
-  std::vector<std::string> constr_pars{"Ae", "Af", "ef"};
+  std::vector<std::string> constr_pars{"Ae", "Af"};
   for (const auto &constr_par : constr_pars) {
     mumu_ReturnToZ = LEP_constr_Zpole(mumu_ReturnToZ, constr_par);
-    mumu_HighQ2 = LEP_constr_HighQ2(mumu_HighQ2, constr_par);
   }
   return std::make_pair(mumu_ReturnToZ, mumu_HighQ2);
 }
