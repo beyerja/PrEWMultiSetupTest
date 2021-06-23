@@ -39,10 +39,7 @@ class MultiResultReader:
   """
   
   def __init__(self, result_dir, 
-               lumi_setups = SDS.default_lumi_setups, 
-               run_setups = SDS.default_run_setups, 
-               muacc_setups = SDS.default_muacc_setups, 
-               difparam_setups = SDS.default_difparam_setups):
+               lumi_setups, run_setups, muacc_setups, difparam_setups):
     self.setup_results = []
     
     log.info("Reading in setup results.")
@@ -71,5 +68,32 @@ class MultiResultReader:
       raise Exception("{} setups found for {} {} {} {}".format(
                         len(found),lumi,run_name,muacc_name,difparam_name))
     return found[0]
+  
+  def append(self, other_mrr):
+    """ Add the results of another MultiResultReader to this one
+    """
+    self.setup_results = np.concatenate([self.setup_results, 
+                                         other_mrr.setup_results])
     
-
+def get_default_pol_mrr(result_dir):
+  """ Get the default MultiResultReader that contains are current results for 
+      runs with beam polarisation.
+  """
+  return MultiResultReader(result_dir, 
+    SDS.default_lumi_setups, SDS.default_pol_run_setups,
+    SDS.default_muacc_setups, SDS.default_pol_difparam_setups)
+    
+def get_default_unpol_mrr(result_dir):
+  """ Get the default MultiResultReader that contains are current results for 
+      runs without beam polarisation.
+  """
+  return MultiResultReader(result_dir, 
+    SDS.default_lumi_setups, SDS.default_unpol_run_setups,
+    SDS.default_muacc_setups, SDS.default_unpol_difparam_setups)
+    
+def get_default_mrr(result_dir):
+  """ Get the default MultiResultReader that contains are current results.
+  """
+  full_mrr = get_default_pol_mrr(result_dir) 
+  full_mrr.append(get_default_unpol_mrr(result_dir))
+  return full_mrr

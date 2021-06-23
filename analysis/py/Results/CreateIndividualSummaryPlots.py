@@ -17,7 +17,7 @@ import Plotting.SetupPlotting as PSP
 log.basicConfig(level=log.INFO) # Set logging level
 output_base = "../../../output"
 fit_output_base = "{}/run_outputs".format(output_base)
-msr = IOMRR.MultiResultReader(fit_output_base)
+msr = IOMRR.get_default_mrr(fit_output_base)
 
 # Output directories
 plot_base = "{}/plots".format(output_base)
