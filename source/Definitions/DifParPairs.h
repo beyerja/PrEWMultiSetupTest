@@ -112,7 +112,7 @@ inline DifParPair dif_pars_fixed_ks() {
                         default_HighQ2().fix_kL().fix_kR());
 }
 
-inline DifParPair dif_pars_LEPconstr_Ae_Af_ef_ks() {
+inline DifParPair dif_pars_LEPconstr_Ae_Af() {
   auto mumu_ReturnToZ = default_ReturnToZ();
   auto mumu_HighQ2 = default_HighQ2();
   std::vector<std::string> constr_pars{"Ae", "Af"};
@@ -122,7 +122,7 @@ inline DifParPair dif_pars_LEPconstr_Ae_Af_ef_ks() {
   return std::make_pair(mumu_ReturnToZ, mumu_HighQ2);
 }
 
-inline DifParPair dif_pars_LEPconstr_Ae_Af_ef_fixed_ks() {
+inline DifParPair dif_pars_LEPconstr_Ae_Af_fixed_ks() {
   auto mumu_ReturnToZ = default_ReturnToZ().fix_kL().fix_kR();
   auto mumu_HighQ2 = default_HighQ2().fix_kL().fix_kR();
   std::vector<std::string> constr_pars{"Ae", "Af"};
