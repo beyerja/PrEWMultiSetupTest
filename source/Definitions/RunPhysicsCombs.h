@@ -39,7 +39,7 @@ RunPhysicsCombs comb_2pol {
     {"2polExt_Lfixed_Pconstr", RunInfos::setup_2polExt_Lfixed_Pconstr} },
   { {"mumu_free",     DifParPairs::dif_pars_free},
     {"mumu_fixed_ks", DifParPairs::dif_pars_fixed_ks},
-    {"mumu_LEPconstr_Ae_Af_ks", DifParPairs::dif_pars_LEPconstr_Ae_Af},
+    {"mumu_LEPconstr_Ae_Af", DifParPairs::dif_pars_LEPconstr_Ae_Af},
     {"mumu_LEPconstr_Ae_Af_fixed_ks", DifParPairs::dif_pars_LEPconstr_Ae_Af_fixed_ks} } };
 
 RunPhysicsCombs comb_1pol {
@@ -50,7 +50,7 @@ RunPhysicsCombs comb_1pol {
     {"1pol_Lfixed_Pconstr", RunInfos::setup_1pol_Lfixed_Pconstr} },
   { {"mumu_free",     DifParPairs::dif_pars_free},
     {"mumu_fixed_ks", DifParPairs::dif_pars_fixed_ks},
-    {"mumu_LEPconstr_Ae_Af_ks", DifParPairs::dif_pars_LEPconstr_Ae_Af},
+    {"mumu_LEPconstr_Ae_Af", DifParPairs::dif_pars_LEPconstr_Ae_Af},
     {"mumu_LEPconstr_Ae_Af_fixed_ks", DifParPairs::dif_pars_LEPconstr_Ae_Af_fixed_ks} } };
 
 RunPhysicsCombs comb_0pol {
