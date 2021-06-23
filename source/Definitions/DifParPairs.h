@@ -19,16 +19,21 @@ using DifParPair = std::pair<PrEWUtils::SetupHelp::DifermionPars,
 
 // -----------------------------------------------------------------------------
 
+const std::string ReturnToZ_str = "81to101";
+const std::string HighQ2_str = "180to275";
+
+// -----------------------------------------------------------------------------
+
 inline DifermionPars default_ReturnToZ() {
   // Default starting setup for return-to-Z mumu parametrisation
   // Using precise starting values
   return PrEWUtils::SetupHelp::DifermionPars()
-      .s0("s0_2f_mu_81to101")
-      .Ae("Ae_2f_mu_81to101", 0.21360014)
-      .Af("Af_2f_mu_81to101", 0.20281099)
-      .ef("ef_2f_mu_81to101", 0.01580906)
-      .kL("kL_2f_mu_81to101", 0.03765170)
-      .kR("kR_2f_mu_81to101", 0.03705971);
+      .s0("s0_2f_mu_" + ReturnToZ_str)
+      .Ae("Ae_2f_mu_" + ReturnToZ_str, 0.21360014)
+      .Af("Af_2f_mu_" + ReturnToZ_str, 0.20281099)
+      .ef("ef_2f_mu_" + ReturnToZ_str, 0.01580906)
+      .kL("kL_2f_mu_" + ReturnToZ_str, 0.03765170)
+      .kR("kR_2f_mu_" + ReturnToZ_str, 0.03705971);
 }
 
 inline DifermionPars default_HighQ2() {
@@ -151,6 +156,16 @@ inline DifParPair dif_pars_ILCconstr_Ae_Af_ef_fixed_ks() {
     mumu_ReturnToZ = ILC_constr_Zpole(mumu_ReturnToZ, constr_par);
     mumu_HighQ2 = ILC_constr_HighQ2(mumu_HighQ2, constr_par);
   }
+  return std::make_pair(mumu_ReturnToZ, mumu_HighQ2);
+}
+
+inline DifParPair dif_pars_AFB_k0_fixed_Ae_Af_kR() {
+  auto mumu_ReturnToZ = default_ReturnToZ().fix_Ae().fix_Af().fix_kR();
+  mumu_ReturnToZ.ef_name = "AFB_2f_mu" + ReturnToZ_str;
+  mumu_ReturnToZ.kL_name = "k0_2f_mu" + ReturnToZ_str;
+  auto mumu_HighQ2 = default_HighQ2().fix_Ae().fix_Af().fix_kR();
+  mumu_HighQ2.ef_name = "AFB_2f_mu" + HighQ2_str;
+  mumu_HighQ2.kL_name = "k0_2f_mu" + HighQ2_str;
   return std::make_pair(mumu_ReturnToZ, mumu_HighQ2);
 }
 
