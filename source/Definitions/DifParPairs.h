@@ -160,12 +160,32 @@ inline DifParPair dif_pars_ILCconstr_Ae_Af_ef_fixed_ks() {
 }
 
 inline DifParPair dif_pars_AFB_k0_fixed_Ae_Af_kR() {
-  auto mumu_ReturnToZ = default_ReturnToZ().fix_Ae().fix_Af().fix_kR();
-  mumu_ReturnToZ.ef_name = "AFB_2f_mu" + ReturnToZ_str;
-  mumu_ReturnToZ.kL_name = "k0_2f_mu" + ReturnToZ_str;
-  auto mumu_HighQ2 = default_HighQ2().fix_Ae().fix_Af().fix_kR();
-  mumu_HighQ2.ef_name = "AFB_2f_mu" + HighQ2_str;
-  mumu_HighQ2.kL_name = "k0_2f_mu" + HighQ2_str;
+  /** Completely removes Af and kR by fixing them to 0.
+      Instead only uses unpolarised quantities AFB and k0 by proxy of ef and kL.
+      Ae is fixed as well because there is no direct sensitivity to it in an
+      unpolarised dataset (keeping in mind that it's value does influence the
+      result on AFB and k0, but is fully correlated with the pol's).
+   **/
+  auto mumu_ReturnToZ = default_ReturnToZ();
+  auto AFB_rrZ =
+      mumu_ReturnToZ.ef_val + 2 * mumu_ReturnToZ.Ae_val * mumu_ReturnToZ.Af_val;
+  auto k0_rrZ = mumu_ReturnToZ.kL_val + mumu_ReturnToZ.kR_val;
+  mumu_ReturnToZ = mumu_ReturnToZ.ef("AFB_2f_mu_" + ReturnToZ_str, AFB_rrZ)
+                       .kL("k0_2f_mu_" + ReturnToZ_str, k0_rrZ)
+                       .fix_Ae()
+                       .fix_Af(0)
+                       .fix_kR(0);
+
+  auto mumu_HighQ2 = default_HighQ2();
+  auto AFB_hQ2 =
+      mumu_HighQ2.ef_val + 2 * mumu_HighQ2.Ae_val * mumu_HighQ2.Af_val;
+  auto k0_hQ2 = mumu_HighQ2.kL_val + mumu_HighQ2.kR_val;
+  mumu_HighQ2 = mumu_HighQ2.ef("AFB_2f_mu_" + HighQ2_str, AFB_hQ2)
+                    .kL("k0_2f_mu_" + HighQ2_str, k0_hQ2)
+                    .fix_Ae()
+                    .fix_Af(0)
+                    .fix_kR(0);
+
   return std::make_pair(mumu_ReturnToZ, mumu_HighQ2);
 }
 
