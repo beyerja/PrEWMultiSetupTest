@@ -34,8 +34,8 @@ def calc_cor_mat(cov_mat):
   std_dev = calc_std_dev(cov_mat)
   norm = np.outer(std_dev,std_dev)
   
-  # Avoid devide-by-zero errors (e.g. for fixed parameters)
-  # -> Will not influence results because rows/columns already 0
-  norm += 1.0 * (norm == 0)
+  # Avoid devide-by-zero errors and numerical fluctuations 
+  # (e.g. for fixed parameters)
+  norm += 1.0 * (np.abs(norm) < 1.e-12)
   
-  return cov_mat / norm
+  return cov_mat / norm * (np.abs(norm) > 1.e-12)
