@@ -23,7 +23,7 @@ def find_PrOut():
   """
   path_options = [
     "/home/jakob/DESY/Programming/TGCAnalysis/PrEW/source/prout",
-    "/afs/desy.de/group/flc/pool/beyerjac/TGCAnalysis/PrEW"
+    "/afs/desy.de/group/flc/pool/beyerjac/TGCAnalysis/PrEW/source/prout"
   ]
   
   for path_option in path_options:
