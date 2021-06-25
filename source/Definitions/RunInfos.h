@@ -33,13 +33,9 @@ inline RunInfo setup_2pol_LPcnstr(int energy, double lumi) {
   return run;
 }
 
-inline RunInfo setup_2pol_LPfixed(int energy, double lumi) {
+inline RunInfo setup_2pol_Lfixed_Pconstr(int energy, double lumi) {
   auto run = setup_2pol_LPcnstr(energy, lumi);
   run.fix_lumi();
-  run.fix_pol("ePol-");
-  run.fix_pol("ePol+");
-  run.fix_pol("pPol-");
-  run.fix_pol("pPol+");
   return run;
 }
 
@@ -52,8 +48,8 @@ inline RunInfo setup_2pol_Lconstr_Pfixed(int energy, double lumi) {
   return run;
 }
 
-inline RunInfo setup_2pol_Lfixed_Pconstr(int energy, double lumi) {
-  auto run = setup_2pol_LPcnstr(energy, lumi);
+inline RunInfo setup_2pol_LPfixed(int energy, double lumi) {
+  auto run = setup_2pol_Lconstr_Pfixed(energy, lumi);
   run.fix_lumi();
   return run;
 }
@@ -89,16 +85,6 @@ inline RunInfo setup_2polExt_LPcnstr(int energy, double lumi) {
   return run;
 }
 
-inline RunInfo setup_2polExt_LPfixed(int energy, double lumi) {
-  auto run = setup_2polExt_LPcnstr(energy, lumi);
-  run.fix_lumi();
-  run.fix_pol("ePol-");
-  run.fix_pol("ePol+");
-  run.fix_pol("pPol-");
-  run.fix_pol("pPol+");
-  return run;
-}
-
 inline RunInfo setup_2polExt_Lconstr_Pfixed(int energy, double lumi) {
   auto run = setup_2polExt_LPcnstr(energy, lumi);
   run.fix_pol("ePol-");
@@ -110,6 +96,12 @@ inline RunInfo setup_2polExt_Lconstr_Pfixed(int energy, double lumi) {
 
 inline RunInfo setup_2polExt_Lfixed_Pconstr(int energy, double lumi) {
   auto run = setup_2polExt_LPcnstr(energy, lumi);
+  run.fix_lumi();
+  return run;
+}
+
+inline RunInfo setup_2polExt_LPfixed(int energy, double lumi) {
+  auto run = setup_2polExt_Lconstr_Pfixed(energy, lumi);
   run.fix_lumi();
   return run;
 }
@@ -128,15 +120,6 @@ inline RunInfo setup_1pol_LPcnstr(int energy, double lumi) {
   run.add_pol_constr("pPol0", 0.0, abs_P_constr);
   run.add_pol_config("e-p0", "ePol-", "pPol0", "-", "+", 0.5);
   run.add_pol_config("e+p0", "ePol+", "pPol0", "+", "+", 0.5);
-  return run;
-}
-
-inline RunInfo setup_1pol_LPfixed(int energy, double lumi) {
-  auto run = setup_1pol_LPcnstr(energy, lumi);
-  run.fix_lumi();
-  run.fix_pol("ePol-");
-  run.fix_pol("ePol+");
-  run.fix_pol("pPol0");
   return run;
 }
 
@@ -160,6 +143,12 @@ inline RunInfo setup_1pol_Lfixed_Pconstr(int energy, double lumi) {
   return run;
 }
 
+inline RunInfo setup_1pol_LPfixed(int energy, double lumi) {
+  auto run = setup_1pol_Lconstr_Pfixed(energy, lumi);
+  run.fix_lumi();
+  return run;
+}
+
 // -----------------------------------------------------------------------------
 
 inline RunInfo setup_0pol_LPcnstr(int energy, double lumi) {
@@ -174,14 +163,6 @@ inline RunInfo setup_0pol_LPcnstr(int energy, double lumi) {
   return run;
 }
 
-inline RunInfo setup_0pol_LPfixed(int energy, double lumi) {
-  auto run = setup_0pol_LPcnstr(energy, lumi);
-  run.fix_lumi();
-  run.fix_pol("ePol0");
-  run.fix_pol("pPol0");
-  return run;
-}
-
 inline RunInfo setup_0pol_Lconstr_P0fixed(int energy, double lumi) {
   auto run = setup_0pol_LPcnstr(energy, lumi);
   run.fix_pol("ePol0");
@@ -191,6 +172,12 @@ inline RunInfo setup_0pol_Lconstr_P0fixed(int energy, double lumi) {
 
 inline RunInfo setup_0pol_Lfixed_P0constr(int energy, double lumi) {
   auto run = setup_0pol_LPcnstr(energy, lumi);
+  run.fix_lumi();
+  return run;
+}
+
+inline RunInfo setup_0pol_LPfixed(int energy, double lumi) {
+  auto run = setup_0pol_Lconstr_P0fixed(energy, lumi);
   run.fix_lumi();
   return run;
 }
