@@ -89,8 +89,10 @@ inline RunInfo setup_2polExt_Lconstr_Pfixed(int energy, double lumi) {
   auto run = setup_2polExt_LPcnstr(energy, lumi);
   run.fix_pol("ePol-");
   run.fix_pol("ePol+");
+  run.fix_pol("ePol0");
   run.fix_pol("pPol-");
   run.fix_pol("pPol+");
+  run.fix_pol("pPol0");
   return run;
 }
 
