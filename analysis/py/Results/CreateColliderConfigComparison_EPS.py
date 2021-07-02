@@ -28,56 +28,59 @@ def draw_setups(mrr, ax, x, y_fcts):
   
   _x = x+x_shifts[0]
   y = y_fcts[0](mrr.get(2000, "2pol_LPcnstr", "MuAccFree", "mumu_free").result_summary())
-  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(80\%,30\%)$, $2$ab$^{-1}$")
+  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(80\%,30\%)$, $2$ab$^{-1}$", alpha=0.1)
   color = bar.patches[0].get_facecolor()
   y = y_fcts[0](mrr.get(2000, "2pol_Lconstr_Pfixed", "MuAccFree", "mumu_free").result_summary())
-  ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3)#, alpha=0.3)      
+  ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3, alpha=0.15)      
   y = y_fcts[0](mrr.get(2000, "2pol_LPcnstr", "MuAccFixd", "mumu_free").result_summary())
-  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3)#, alpha=0.3)      
+  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3, alpha=0.15)      
 
   _x = x+x_shifts[1]
   y = y_fcts[1](mrr.get(2000, "1pol_LPcnstr", "MuAccFree", "mumu_free").result_summary())
-  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(80\%,0\%)$, $2$ab$^{-1}$")
+  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(80\%,0\%)$, $2$ab$^{-1}$", alpha=0.1)
   color = bar.patches[0].get_facecolor()
   y = y_fcts[1](mrr.get(2000, "1pol_Lconstr_Pfixed", "MuAccFree", "mumu_free").result_summary())
-  ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3)#, alpha=0.3)      
+  ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3, alpha=0.15)      
   y = y_fcts[1](mrr.get(2000, "1pol_LPcnstr", "MuAccFixd", "mumu_free").result_summary())
-  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3)#, alpha=0.3)      
+  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3, alpha=0.15)      
 
   _x = x+x_shifts[2]
   y = y_fcts[2](mrr.get(2000, "0pol_LPcnstr", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
-  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(0\%,0\%)$, $2$ab$^{-1}$")
+  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(0\%,0\%)$, $2$ab$^{-1}$")#, alpha=0.3)
   color = bar.patches[0].get_facecolor()
   y = y_fcts[2](mrr.get(2000, "0pol_Lconstr_P0fixed", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
-  ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3)#, alpha=0.3) 
+  ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3, alpha=0.15) 
   y = y_fcts[2](mrr.get(2000, "0pol_LPcnstr", "MuAccFixd", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
-  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3)#, alpha=0.3)      
+  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3, alpha=0.15)      
 
   _x = x+x_shifts[3]
   y = y_fcts[3](mrr.get(10000, "0pol_LPcnstr", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
-  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(0\%,0\%)$, $10$ab$^{-1}$")#, alpha=0.15)
+  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(0\%,0\%)$, $10$ab$^{-1}$", alpha=0.15)
   color = bar.patches[0].get_facecolor()
   y = y_fcts[3](mrr.get(10000, "0pol_Lconstr_P0fixed", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
-  ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3)#, alpha=0.15) 
+  ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3, alpha=0.15) 
   y = y_fcts[3](mrr.get(10000, "0pol_LPcnstr", "MuAccFixd", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
-  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3)#, alpha=0.15)      
+  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3, alpha=0.15)      
 
 def markers_to_legend_handles(ax):
   """ Add extra entries to legend that describe the markers for different tested 
       scenarios.
   """
   handles, labels = ax.get_legend_handles_labels()
-  cross_dummy = plt.scatter([], [], color='None', ec='black', marker='X', linestyle='None', s=120, label=r'all $P$ fixed')#, alpha=0.3)
-  star_dummy = plt.scatter([], [], color='None', ec='black', marker='*', linestyle='None', s=120, label=r'$\mu$ acc. fixed')#, alpha=0.3)
+  cross_dummy = plt.scatter([], [], color='None', ec='black', marker='X', linestyle='None', s=120, label=r'all $P$ fixed', alpha=0.3)
+  star_dummy = plt.scatter([], [], color='None', ec='black', marker='*', linestyle='None', s=120, label=r'$\mu$ acc. fixed', alpha=0.3)
   handles.append(cross_dummy) 
   handles.append(star_dummy) 
   return handles
   
 def make_legtext_transparent(ax):
     leg = ax.get_legend()
-    # leg.texts[3].set_color("gray")
-    # leg.texts[4].set_color("gray")
-    # leg.texts[5].set_color("gray")
+    leg.texts[0].set_color("gray") # Hide both pol
+    leg.texts[1].set_color("gray") # Hide e- pol
+    # leg.texts[2].set_color("gray") # Hide unpol 2invab
+    leg.texts[3].set_color("gray") # Hide unpol 10invab
+    leg.texts[4].set_color("gray") # Hide P fixed
+    leg.texts[5].set_color("gray") # Hide mu acc fixed
 
 #-------------------------------------------------------------------------------
 
@@ -229,7 +232,7 @@ def main():
                                      unpol_difparam_setups))
 
   # Output directories
-  output_dir = "/home/jakob/DESY/Presentations/Conferences/2021_07_29_EPS_HEP/Plots/ColliderConfigComparison/bars_all".format(output_base)
+  output_dir = "/home/jakob/DESY/Presentations/Conferences/2021_07_29_EPS_HEP/Plots/ColliderConfigComparison/bars_2invab_unpolarised".format(output_base)
 
   scale = 1.e-4
   difermion_par_plot(mrr, output_dir, "81to101", "return-to-Z", scale)
