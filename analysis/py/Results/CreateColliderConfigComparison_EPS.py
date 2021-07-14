@@ -22,9 +22,9 @@ def draw_setups(mrr, ax, x, y_fcts):
   """ This part should be common for all physics and nuisance histograms:
       The drawing of the different setups
   """
-  x_shifts, bar_width = np.linspace(-0.27,0.27,4,endpoint=True,retstep=True)
-  marker_shifts = np.linspace(-bar_width/2,bar_width/2,4,endpoint=True)
-  ms = 8 # marker size
+  x_shifts, bar_width = np.linspace(-0.27,0.27,3,endpoint=True,retstep=True)
+  marker_shifts = np.linspace(-bar_width/2,bar_width/2,3,endpoint=True)
+  ms = 12 # marker size
   
   _x = x+x_shifts[0]
   y = y_fcts[0](mrr.get(2000, "2pol_LPcnstr", "MuAccFree", "mumu_free").result_summary())
@@ -32,8 +32,8 @@ def draw_setups(mrr, ax, x, y_fcts):
   color = bar.patches[0].get_facecolor()
   y = y_fcts[0](mrr.get(2000, "2pol_Lconstr_Pfixed", "MuAccFree", "mumu_free").result_summary())
   ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3, alpha=0.07)      
-  y = y_fcts[0](mrr.get(2000, "2pol_LPcnstr", "MuAccFixd", "mumu_free").result_summary())
-  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3, alpha=0.07)      
+  # y = y_fcts[0](mrr.get(2000, "2pol_LPcnstr", "MuAccFixd", "mumu_free").result_summary())
+  # ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3, alpha=0.07)      
 
   _x = x+x_shifts[1]
   y = y_fcts[1](mrr.get(2000, "1pol_LPcnstr", "MuAccFree", "mumu_free").result_summary())
@@ -41,8 +41,8 @@ def draw_setups(mrr, ax, x, y_fcts):
   color = bar.patches[0].get_facecolor()
   y = y_fcts[1](mrr.get(2000, "1pol_Lconstr_Pfixed", "MuAccFree", "mumu_free").result_summary())
   ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3, alpha=0.07)      
-  y = y_fcts[1](mrr.get(2000, "1pol_LPcnstr", "MuAccFixd", "mumu_free").result_summary())
-  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3, alpha=0.07)      
+  # y = y_fcts[1](mrr.get(2000, "1pol_LPcnstr", "MuAccFixd", "mumu_free").result_summary())
+  # ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3, alpha=0.07)      
 
   _x = x+x_shifts[2]
   y = y_fcts[2](mrr.get(2000, "0pol_LPcnstr", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
@@ -50,17 +50,17 @@ def draw_setups(mrr, ax, x, y_fcts):
   color = bar.patches[0].get_facecolor()
   y = y_fcts[2](mrr.get(2000, "0pol_Lconstr_P0fixed", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
   ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3, alpha=0.07) 
-  y = y_fcts[2](mrr.get(2000, "0pol_LPcnstr", "MuAccFixd", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
-  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3, alpha=0.07)      
+  # y = y_fcts[2](mrr.get(2000, "0pol_LPcnstr", "MuAccFixd", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
+  # ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3, alpha=0.07)      
 
-  _x = x+x_shifts[3]
-  y = y_fcts[3](mrr.get(10000, "0pol_LPcnstr", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
-  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(0\%,0\%)$, $10$ab$^{-1}$", alpha=0.1)
-  color = bar.patches[0].get_facecolor()
-  y = y_fcts[3](mrr.get(10000, "0pol_Lconstr_P0fixed", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
-  ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3, alpha=0.07) 
-  y = y_fcts[3](mrr.get(10000, "0pol_LPcnstr", "MuAccFixd", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
-  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3, alpha=0.07)      
+  # _x = x+x_shifts[3]
+  # y = y_fcts[3](mrr.get(10000, "0pol_LPcnstr", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
+  # bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(0\%,0\%)$, $10$ab$^{-1}$", alpha=0.1)
+  # color = bar.patches[0].get_facecolor()
+  # y = y_fcts[3](mrr.get(10000, "0pol_Lconstr_P0fixed", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
+  # ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3, alpha=0.07) 
+  # # y = y_fcts[3](mrr.get(10000, "0pol_LPcnstr", "MuAccFixd", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
+  # # ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3, alpha=0.07)      
 
 def markers_to_legend_handles(ax):
   """ Add extra entries to legend that describe the markers for different tested 
@@ -68,9 +68,9 @@ def markers_to_legend_handles(ax):
   """
   handles, labels = ax.get_legend_handles_labels()
   cross_dummy = plt.scatter([], [], color='None', ec='black', marker='X', linestyle='None', s=120, label=r'all $P$ fixed', alpha=0.07)
-  star_dummy = plt.scatter([], [], color='None', ec='black', marker='*', linestyle='None', s=120, label=r'$\mu$ acc. fixed', alpha=0.07)
+  # star_dummy = plt.scatter([], [], color='None', ec='black', marker='*', linestyle='None', s=120, label=r'$\mu$ acc. fixed', alpha=0.07)
   handles.append(cross_dummy) 
-  handles.append(star_dummy) 
+  # handles.append(star_dummy) 
   return handles
   
 def make_legtext_transparent(ax):
@@ -78,9 +78,9 @@ def make_legtext_transparent(ax):
     leg.texts[0].set_alpha(0.1) # Hide both pol
     leg.texts[1].set_alpha(0.1) # Hide e- pol
     # leg.texts[2].set_alpha(0.1) # Hide unpol 2invab
-    leg.texts[3].set_alpha(0.1) # Hide unpol 10invab
-    leg.texts[4].set_alpha(0.1) # Hide P fixed
-    leg.texts[5].set_alpha(0.1) # Hide mu acc fixed
+    # leg.texts[3].set_alpha(0.1) # Hide unpol 10invab
+    leg.texts[3].set_alpha(0.1) # Hide P fixed
+    # leg.texts[5].set_alpha(0.1) # Hide mu acc fixed
 
 #-------------------------------------------------------------------------------
 
@@ -114,7 +114,7 @@ def difermion_par_plot(mrr, output_dir, mass_range, label, scale):
   # Add markers for the tested scenarios to legend
   handles = markers_to_legend_handles(ax)
   
-  legend = plt.legend(handles=handles, title="$(P_{e^{-}},P_{e^{+}})$, $L$", ncol=3, fontsize=17)#, bbox_to_anchor=(-0.1, 1.05), loc='lower left')
+  legend = plt.legend(handles=handles, title="$(P_{e^{-}},P_{e^{+}})$, $L$", ncol=2, fontsize=20)#, bbox_to_anchor=(-0.1, 1.05), loc='lower left')
   make_legtext_transparent(ax)
 
   ax.set_xticks(x + 0.5, minor=True)
@@ -232,7 +232,7 @@ def main():
                                      unpol_difparam_setups))
 
   # Output directories
-  output_dir = "/home/jakob/DESY/Presentations/Conferences/2021_07_29_EPS_HEP/Plots/ColliderConfigComparison/bars_2invab_unpolarised".format(output_base)
+  output_dir = "/home/jakob/DESY/Presentations/Conferences/2021_07_29_EPS_HEP/Plots/ColliderConfigComparison/PolOnly/bars_2invab_unpolarised".format(output_base)
 
   scale = 1.e-4
   difermion_par_plot(mrr, output_dir, "81to101", "return-to-Z", scale)
