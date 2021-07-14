@@ -90,7 +90,7 @@ def make_fit_function(x_par_names, par_norm):
 #-------------------------------------------------------------------------------
 
 def difermion_par_plot(mrr, output_dir, mass_range, label, scale):
-  fig = plt.figure(figsize=(15,9), tight_layout=True)
+  fig = plt.figure(figsize=(12,7.5), tight_layout=True)
   
   x = np.arange(8)+0.5
   x_ticks = [ "$\sigma_0/\sigma_0^{SM}$", "$A_e$", "$A_{\mu}$", "$\epsilon_{\mu}$", "$A_{FB,0}^{\mu}$", "$k_L$", "$k_R$", "$k_0$" ]
@@ -114,7 +114,7 @@ def difermion_par_plot(mrr, output_dir, mass_range, label, scale):
   # Add markers for the tested scenarios to legend
   handles = markers_to_legend_handles(ax)
   
-  legend = plt.legend(handles=handles, title="$(P_{e^{-}},P_{e^{+}})$, $L$", ncol=3, fontsize=17, bbox_to_anchor=(-0.1, 1.05), loc='lower left')
+  legend = plt.legend(handles=handles, title="$(P_{e^{-}},P_{e^{+}})$, $L$", ncol=3, fontsize=17)#, bbox_to_anchor=(-0.1, 1.05), loc='lower left')
   make_legtext_transparent(ax)
 
   ax.set_xticks(x + 0.5, minor=True)
