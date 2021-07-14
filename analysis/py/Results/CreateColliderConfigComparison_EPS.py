@@ -28,47 +28,47 @@ def draw_setups(mrr, ax, x, y_fcts):
   
   _x = x+x_shifts[0]
   y = y_fcts[0](mrr.get(2000, "2pol_LPcnstr", "MuAccFree", "mumu_free").result_summary())
-  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(80\%,30\%)$, $2$ab$^{-1}$", alpha=0.1)
+  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(80\%,30\%)$, $2$ab$^{-1}$", alpha=0.07)
   color = bar.patches[0].get_facecolor()
   y = y_fcts[0](mrr.get(2000, "2pol_Lconstr_Pfixed", "MuAccFree", "mumu_free").result_summary())
-  ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3, alpha=0.15)      
+  ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3, alpha=0.1)      
   y = y_fcts[0](mrr.get(2000, "2pol_LPcnstr", "MuAccFixd", "mumu_free").result_summary())
-  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3, alpha=0.15)      
+  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3, alpha=0.1)      
 
   _x = x+x_shifts[1]
   y = y_fcts[1](mrr.get(2000, "1pol_LPcnstr", "MuAccFree", "mumu_free").result_summary())
-  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(80\%,0\%)$, $2$ab$^{-1}$", alpha=0.1)
+  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(80\%,0\%)$, $2$ab$^{-1}$", alpha=0.07)
   color = bar.patches[0].get_facecolor()
   y = y_fcts[1](mrr.get(2000, "1pol_Lconstr_Pfixed", "MuAccFree", "mumu_free").result_summary())
-  ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3, alpha=0.15)      
+  ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3, alpha=0.1)      
   y = y_fcts[1](mrr.get(2000, "1pol_LPcnstr", "MuAccFixd", "mumu_free").result_summary())
-  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3, alpha=0.15)      
+  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3, alpha=0.1)      
 
   _x = x+x_shifts[2]
   y = y_fcts[2](mrr.get(2000, "0pol_LPcnstr", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
-  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(0\%,0\%)$, $2$ab$^{-1}$")#, alpha=0.3)
+  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(0\%,0\%)$, $2$ab$^{-1}$")#, alpha=0.2)
   color = bar.patches[0].get_facecolor()
   y = y_fcts[2](mrr.get(2000, "0pol_Lconstr_P0fixed", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
-  ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3, alpha=0.15) 
+  ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3, alpha=0.1) 
   y = y_fcts[2](mrr.get(2000, "0pol_LPcnstr", "MuAccFixd", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
-  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3, alpha=0.15)      
+  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3, alpha=0.1)      
 
   _x = x+x_shifts[3]
   y = y_fcts[3](mrr.get(10000, "0pol_LPcnstr", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
-  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(0\%,0\%)$, $10$ab$^{-1}$", alpha=0.15)
+  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(0\%,0\%)$, $10$ab$^{-1}$", alpha=0.1)
   color = bar.patches[0].get_facecolor()
   y = y_fcts[3](mrr.get(10000, "0pol_Lconstr_P0fixed", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
-  ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3, alpha=0.15) 
+  ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3, alpha=0.1) 
   y = y_fcts[3](mrr.get(10000, "0pol_LPcnstr", "MuAccFixd", "mumu_AFB_k0_fixed_Ae_Af_kR").result_summary())
-  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3, alpha=0.15)      
+  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3, alpha=0.1)      
 
 def markers_to_legend_handles(ax):
   """ Add extra entries to legend that describe the markers for different tested 
       scenarios.
   """
   handles, labels = ax.get_legend_handles_labels()
-  cross_dummy = plt.scatter([], [], color='None', ec='black', marker='X', linestyle='None', s=120, label=r'all $P$ fixed', alpha=0.3)
-  star_dummy = plt.scatter([], [], color='None', ec='black', marker='*', linestyle='None', s=120, label=r'$\mu$ acc. fixed', alpha=0.3)
+  cross_dummy = plt.scatter([], [], color='None', ec='black', marker='X', linestyle='None', s=120, label=r'all $P$ fixed', alpha=0.2)
+  star_dummy = plt.scatter([], [], color='None', ec='black', marker='*', linestyle='None', s=120, label=r'$\mu$ acc. fixed', alpha=0.2)
   handles.append(cross_dummy) 
   handles.append(star_dummy) 
   return handles
@@ -197,21 +197,21 @@ def main():
   unpol_lumi_setups = [ 2000, 10000 ]
   pol_run_setups = [
   # TODO FIX THE ANNOTATIONS
-    IORS.RunSetup("2polExt_LPcnstr", 80, 30, "constrained", "constrained"),
-    IORS.RunSetup("2polExt_Lconstr_Pfixed", 80, 30, "constrained", "fixed"),
-    IORS.RunSetup("2polExt_Lfixed_Pconstr", 80, 30, "constrained", "fixed"),
+    # IORS.RunSetup("2polExt_LPcnstr", 80, 30, "constrained", "constrained"),
+    # IORS.RunSetup("2polExt_Lconstr_Pfixed", 80, 30, "constrained", "fixed"),
+    # IORS.RunSetup("2polExt_Lfixed_Pconstr", 80, 30, "constrained", "fixed"),
     IORS.RunSetup("2pol_LPcnstr", 80, 30, "constrained", "constrained"),
     IORS.RunSetup("2pol_Lconstr_Pfixed", 80, 30, "constrained", "fixed"),
-    IORS.RunSetup("2pol_Lfixed_Pconstr", 80, 30, "constrained", "fixed"),
+    # IORS.RunSetup("2pol_Lfixed_Pconstr", 80, 30, "constrained", "fixed"),
     IORS.RunSetup("1pol_LPcnstr", 80,  0, "constrained", "constrained"),
     IORS.RunSetup("1pol_Lconstr_Pfixed", 80,  0, "constrained", "fixed"),
-    IORS.RunSetup("1pol_LPcnstr_P0fixed", 80,  0, "constrained", "constrained, P0 fixed"),
-    IORS.RunSetup("1pol_Lfixed_Pconstr", 80,  0, "constrained", "fixed")
+    # IORS.RunSetup("1pol_LPcnstr_P0fixed", 80,  0, "constrained", "constrained, P0 fixed"),
+    # IORS.RunSetup("1pol_Lfixed_Pconstr", 80,  0, "constrained", "fixed")
   ]
   unpol_run_setups = [
     IORS.RunSetup("0pol_LPcnstr",  0,  0, "constrained", "constrained"),
     IORS.RunSetup("0pol_Lconstr_P0fixed",  0,  0, "constrained", "fixed"),
-    IORS.RunSetup("0pol_Lfixed_P0constr",  0,  0, "constrained", "fixed")
+    # IORS.RunSetup("0pol_Lfixed_P0constr",  0,  0, "constrained", "fixed")
   ]
   muacc_setups = [
     IOMAS.MuAccSetup("MuAccFree", 0.9925, "free", "free"),
@@ -236,8 +236,8 @@ def main():
 
   scale = 1.e-4
   difermion_par_plot(mrr, output_dir, "81to101", "return-to-Z", scale)
-  difermion_par_plot(mrr, output_dir, "180to275", r"high-$\sqrt{s*}$", scale)
-  nuisance_par_plot(mrr, output_dir, scale)
+  # difermion_par_plot(mrr, output_dir, "180to275", r"high-$\sqrt{s*}$", scale)
+  # nuisance_par_plot(mrr, output_dir, scale)
   
 if __name__ == "__main__":
   main()
