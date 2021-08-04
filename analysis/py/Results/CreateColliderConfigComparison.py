@@ -121,7 +121,7 @@ def difermion_par_plot(mrr, output_dir, mass_range, label, scale):
   fig = plt.figure(figsize=(15,9), tight_layout=True)
   
   x = np.arange(7)+0.5
-  x_ticks = [ "$\sigma_0/\sigma_0^{SM}$", "$A_e$", "$A_{\mu}$", "$\epsilon_{\mu}$", "$A_{FB,0}^{\mu}$", "$k_L$", "$k_R$", "$k_0$" ]
+  x_ticks = [ "$\sigma_0/\sigma_0^{SM}$", "$A_e$", "$A_{\mu}$", "$\epsilon_{\mu}$", "$A_{FB,0}^{\mu}$", "$k_0$", "$\Delta k$" ]
   plt.xticks(x, x_ticks, size='large')
   
   plt.xlabel('$e^+e^- \\rightarrow \mu\mu$ parameters at {}'.format(label), size='large')
