@@ -32,8 +32,8 @@ inline DifermionPars default_ReturnToZ() {
       .Ae("Ae_2f_mu_" + ReturnToZ_str, 0.21360014)
       .Af("Af_2f_mu_" + ReturnToZ_str, 0.20281099)
       .ef("ef_2f_mu_" + ReturnToZ_str, 0.01580906)
-      .kL("kL_2f_mu_" + ReturnToZ_str, 0.03765170)
-      .kR("kR_2f_mu_" + ReturnToZ_str, 0.03705971);
+      .k0("k0_2f_mu_" + ReturnToZ_str, 0.07471141)
+      .dk("dk_2f_mu_" + ReturnToZ_str, 0.00059199);
 }
 
 inline DifermionPars default_HighQ2() {
@@ -43,8 +43,8 @@ inline DifermionPars default_HighQ2() {
       .Ae(0.11251847)
       .Af(0.03217479)
       .ef(1.42594481)
-      .kL(0.00032413)
-      .kR(0.00000943);
+      .k0(0.00033356)
+      .dk(0.00031470);
 }
 
 // -----------------------------------------------------------------------------
@@ -75,10 +75,10 @@ inline DifermionPars ILC_constr_Zpole(DifermionPars dif_par,
     dif_par = dif_par.constr_Af(dif_par.Af_val, 0.0008);
   } else if (par_name == "ef") {
     dif_par = dif_par.constr_ef(dif_par.ef_val, 0.0014);
-  } else if (par_name == "kL") {
-    dif_par = dif_par.constr_kL(dif_par.kL_val, 0.0013);
-  } else if (par_name == "kR") {
-    dif_par = dif_par.constr_kR(dif_par.kR_val, 0.0016);
+  } else if (par_name == "k0") {
+    dif_par = dif_par.constr_k0(dif_par.k0_val, 0.0013);
+  } else if (par_name == "dk") {
+    dif_par = dif_par.constr_dk(dif_par.dk_val, 0.0016);
   } else {
     throw std::invalid_argument(par_name + " isn't valid 2f parameter.");
   }
@@ -96,10 +96,10 @@ inline DifermionPars ILC_constr_HighQ2(DifermionPars dif_par,
     dif_par = dif_par.constr_Af(dif_par.Af_val, 0.0006);
   } else if (par_name == "ef") {
     dif_par = dif_par.constr_ef(dif_par.ef_val, 0.0010);
-  } else if (par_name == "kL") {
-    dif_par = dif_par.constr_kL(dif_par.kL_val, 0.0010);
-  } else if (par_name == "kR") {
-    dif_par = dif_par.constr_kR(dif_par.kR_val, 0.0011);
+  } else if (par_name == "k0") {
+    dif_par = dif_par.constr_k0(dif_par.k0_val, 0.0010);
+  } else if (par_name == "dk") {
+    dif_par = dif_par.constr_dk(dif_par.dk_val, 0.0011);
   } else {
     throw std::invalid_argument(par_name + " isn't valid 2f parameter.");
   }
@@ -113,8 +113,8 @@ inline DifParPair dif_pars_free() {
 }
 
 inline DifParPair dif_pars_fixed_ks() {
-  return std::make_pair(default_ReturnToZ().fix_kL().fix_kR(),
-                        default_HighQ2().fix_kL().fix_kR());
+  return std::make_pair(default_ReturnToZ().fix_k0().fix_dk(),
+                        default_HighQ2().fix_k0().fix_dk());
 }
 
 inline DifParPair dif_pars_LEPconstr_Ae_Af() {
@@ -128,8 +128,8 @@ inline DifParPair dif_pars_LEPconstr_Ae_Af() {
 }
 
 inline DifParPair dif_pars_LEPconstr_Ae_Af_fixed_ks() {
-  auto mumu_ReturnToZ = default_ReturnToZ().fix_kL().fix_kR();
-  auto mumu_HighQ2 = default_HighQ2().fix_kL().fix_kR();
+  auto mumu_ReturnToZ = default_ReturnToZ().fix_k0().fix_dk();
+  auto mumu_HighQ2 = default_HighQ2().fix_k0().fix_dk();
   std::vector<std::string> constr_pars{"Ae", "Af"};
   for (const auto &constr_par : constr_pars) {
     mumu_ReturnToZ = LEP_constr_Zpole(mumu_ReturnToZ, constr_par);
@@ -140,7 +140,7 @@ inline DifParPair dif_pars_LEPconstr_Ae_Af_fixed_ks() {
 inline DifParPair dif_pars_ILCconstr_Ae_Af_ef_ks() {
   auto mumu_ReturnToZ = default_ReturnToZ();
   auto mumu_HighQ2 = default_HighQ2();
-  std::vector<std::string> constr_pars{"Ae", "Af", "ef", "kL", "kR"};
+  std::vector<std::string> constr_pars{"Ae", "Af", "ef", "k0", "dk"};
   for (const auto &constr_par : constr_pars) {
     mumu_ReturnToZ = ILC_constr_Zpole(mumu_ReturnToZ, constr_par);
     mumu_HighQ2 = ILC_constr_HighQ2(mumu_HighQ2, constr_par);
@@ -149,8 +149,8 @@ inline DifParPair dif_pars_ILCconstr_Ae_Af_ef_ks() {
 }
 
 inline DifParPair dif_pars_ILCconstr_Ae_Af_ef_fixed_ks() {
-  auto mumu_ReturnToZ = default_ReturnToZ().fix_kL().fix_kR();
-  auto mumu_HighQ2 = default_HighQ2().fix_kL().fix_kR();
+  auto mumu_ReturnToZ = default_ReturnToZ().fix_k0().fix_dk();
+  auto mumu_HighQ2 = default_HighQ2().fix_k0().fix_dk();
   std::vector<std::string> constr_pars{"Ae", "Af", "ef"};
   for (const auto &constr_par : constr_pars) {
     mumu_ReturnToZ = ILC_constr_Zpole(mumu_ReturnToZ, constr_par);
@@ -159,32 +159,29 @@ inline DifParPair dif_pars_ILCconstr_Ae_Af_ef_fixed_ks() {
   return std::make_pair(mumu_ReturnToZ, mumu_HighQ2);
 }
 
-inline DifParPair dif_pars_AFB_k0_fixed_Ae_Af_kR() {
-  /** Completely removes Af and kR by fixing them to 0.
-      Instead only uses unpolarised quantities AFB and k0 by proxy of ef and kL.
-      Ae is fixed as well because there is no direct sensitivity to it in an
-      unpolarised dataset (keeping in mind that it's value does influence the
-      result on AFB and k0, but is fully correlated with the pol's).
+inline DifParPair dif_pars_AFB_k0_fixed_Ae_Af_dk() {
+  /** Completely removes Af by fixing it to 0.
+      Instead only uses unpolarised quantities AFB by proxy of ef.
+      Ae and dk are fixed as well because there is no direct sensitivity to them 
+      in an unpolarised dataset (keeping in mind that it's value does influence 
+      the result on AFB and k0, but is fully correlated with the pol's).
+      For truly correct result one needs to use constraints.
    **/
   auto mumu_ReturnToZ = default_ReturnToZ();
   auto AFB_rrZ =
       mumu_ReturnToZ.ef_val + 2 * mumu_ReturnToZ.Ae_val * mumu_ReturnToZ.Af_val;
-  auto k0_rrZ = mumu_ReturnToZ.kL_val + mumu_ReturnToZ.kR_val;
   mumu_ReturnToZ = mumu_ReturnToZ.ef("AFB_2f_mu_" + ReturnToZ_str, AFB_rrZ)
-                       .kL("k0_2f_mu_" + ReturnToZ_str, k0_rrZ)
                        .fix_Ae()
                        .fix_Af(0)
-                       .fix_kR(0);
+                       .fix_dk();
 
   auto mumu_HighQ2 = default_HighQ2();
   auto AFB_hQ2 =
       mumu_HighQ2.ef_val + 2 * mumu_HighQ2.Ae_val * mumu_HighQ2.Af_val;
-  auto k0_hQ2 = mumu_HighQ2.kL_val + mumu_HighQ2.kR_val;
   mumu_HighQ2 = mumu_HighQ2.ef("AFB_2f_mu_" + HighQ2_str, AFB_hQ2)
-                    .kL("k0_2f_mu_" + HighQ2_str, k0_hQ2)
                     .fix_Ae()
                     .fix_Af(0)
-                    .fix_kR(0);
+                    .fix_dk();
 
   return std::make_pair(mumu_ReturnToZ, mumu_HighQ2);
 }

@@ -60,7 +60,7 @@ RunPhysicsCombs comb_0pol {
     {"0pol_Lfixed_P0constr", RunInfos::setup_0pol_Lfixed_P0constr} },
   { {"mumu_ILCconstr_Ae_Af_ef_ks", DifParPairs::dif_pars_ILCconstr_Ae_Af_ef_ks},
     {"mumu_ILCconstr_Ae_Af_ef_fixed_ks", DifParPairs::dif_pars_ILCconstr_Ae_Af_ef_fixed_ks},
-    {"mumu_AFB_k0_fixed_Ae_Af_kR", DifParPairs::dif_pars_AFB_k0_fixed_Ae_Af_kR} } };
+    {"mumu_AFB_k0_fixed_Ae_Af_dk", DifParPairs::dif_pars_AFB_k0_fixed_Ae_Af_dk} } };
 // clang-format on
 
 // -----------------------------------------------------------------------------
