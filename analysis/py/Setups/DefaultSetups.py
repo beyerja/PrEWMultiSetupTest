@@ -37,7 +37,7 @@ default_unpol_run_setups = [
   IORS.RunSetup("0pol_Lfixed_P0constr",  0,  0, "fixed", "constrained")
 ]
 
-default_pol_difparam_setups = [                         # s0, Ae, Af, ef, kL, kR
+default_pol_difparam_setups = [                         # s0, Ae, Af, ef, k0, dk
   IODPS.DifParamSetup("mumu_free",                      "free", "free", "free", "free", "free", "free"),
   IODPS.DifParamSetup("mumu_fixed_ks",                  "free", "free", "free", "free", "fixed", "fixed"),
   IODPS.DifParamSetup("mumu_LEPconstr_Ae_Af",           "free", "constrained", "constrained", "constrained", "constrained", "constrained", constr_type="LEP"),
@@ -47,5 +47,5 @@ default_pol_difparam_setups = [                         # s0, Ae, Af, ef, kL, kR
 default_unpol_difparam_setups = [
   IODPS.DifParamSetup("mumu_ILCconstr_Ae_Af_ef_ks",       "free", "constrained", "constrained", "constrained", "constrained", "constrained", constr_type="ILC"),
   IODPS.DifParamSetup("mumu_ILCconstr_Ae_Af_ef_fixed_ks", "free", "constrained", "constrained", "constrained", "fixed", "fixed", constr_type="ILC"),
-  IODPS.DifParamSetup("mumu_AFB_k0_fixed_Ae_Af_kR",       "free", "fixed", "fixed", "free->AFB", "free->k0", "fixed")
+  IODPS.DifParamSetup("mumu_AFB_k0_fixed_Ae_Af_dk",       "free", "fixed", "fixed", "free->AFB", "free->k0", "fixed")
 ]
