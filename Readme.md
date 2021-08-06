@@ -40,7 +40,7 @@ With the ```--cpus=n_cpus``` the number of cpus used on the BIRD cluster can be 
 ### The source code
 
 The main configuration and source code is in `source/main.cpp`.
-Details on the configurations are in the `.h` files in the `source` directory.
+Details on the configurations are in the `.h` files in the `source/Definitions` directory.
 
 It uses the necessary `PrEW` classes and the interfaces provided by `PrEWUtils` to be as clear as manageable.
 (This may not always have worked out.)

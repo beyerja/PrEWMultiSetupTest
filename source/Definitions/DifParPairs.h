@@ -162,8 +162,8 @@ inline DifParPair dif_pars_ILCconstr_Ae_Af_ef_fixed_ks() {
 inline DifParPair dif_pars_AFB_k0_fixed_Ae_Af_dk() {
   /** Completely removes Af by fixing it to 0.
       Instead only uses unpolarised quantities AFB by proxy of ef.
-      Ae and dk are fixed as well because there is no direct sensitivity to them 
-      in an unpolarised dataset (keeping in mind that it's value does influence 
+      Ae and dk are fixed as well because there is no direct sensitivity to them
+      in an unpolarised dataset (keeping in mind that it's value does influence
       the result on AFB and k0, but is fully correlated with the pol's).
       For truly correct result one needs to use constraints.
    **/
@@ -185,6 +185,27 @@ inline DifParPair dif_pars_AFB_k0_fixed_Ae_Af_dk() {
 
   return std::make_pair(mumu_ReturnToZ, mumu_HighQ2);
 }
+
+// -----------------------------------------------------------------------------
+// Default mapping which parametrisation to use for which polarisation setup
+
+using DifParPairFnc = std::function<DifParPair()>;
+using DifParMap = std::map<std::string, DifParPairFnc>;
+
+const std::map<std::string, DifParMap> default_dif_pars{
+    {"2pol",
+     {{"mumu_free", DifParPairs::dif_pars_free},
+      {"mumu_fixed_ks", DifParPairs::dif_pars_fixed_ks}}},
+    {"1pol",
+     {{"mumu_free", DifParPairs::dif_pars_free},
+      {"mumu_fixed_ks", DifParPairs::dif_pars_fixed_ks}}},
+    {"0pol",
+     {{"mumu_ILCconstr_Ae_Af_ef_ks",
+       DifParPairs::dif_pars_ILCconstr_Ae_Af_ef_ks},
+      {"mumu_ILCconstr_Ae_Af_ef_fixed_ks",
+       DifParPairs::dif_pars_ILCconstr_Ae_Af_ef_fixed_ks},
+      {"mumu_AFB_k0_fixed_Ae_Af_dk",
+       DifParPairs::dif_pars_AFB_k0_fixed_Ae_Af_dk}}}};
 
 // -----------------------------------------------------------------------------
 

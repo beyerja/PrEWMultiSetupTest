@@ -7,7 +7,7 @@
 using namespace PrEWUtils::SetupHelp;
 
 namespace RunInfos {
-  
+
 const double rel_L_constr = 3.0e-3;
 const double rel_P_constr = 2.5e-3;
 const double abs_P_constr = 2.5e-3;
@@ -183,6 +183,36 @@ inline RunInfo setup_0pol_LPfixed(int energy, double lumi) {
   run.fix_lumi();
   return run;
 }
+
+// -----------------------------------------------------------------------------
+// Available default setups as maps
+
+using RunInfoFnc = std::function<RunInfo(int, double)>;
+using RunInfoMap = std::map<std::string, RunInfoFnc>;
+
+const std::map<std::string, RunInfoMap> default_run_setups{
+    {"2pol",
+     {{"2pol_LPcnstr", RunInfos::setup_2pol_LPcnstr},
+      {"2pol_LPfixed", RunInfos::setup_2pol_LPfixed},
+      {"2pol_Lconstr_Pfixed", RunInfos::setup_2pol_Lconstr_Pfixed},
+      {"2pol_Lconstr_Pfixed", RunInfos::setup_2pol_Lconstr_Pfixed},
+      {"2pol_Lconstr_Pfixed", RunInfos::setup_2pol_Lconstr_Pfixed},
+      {"2pol_Lfixed_Pconstr", RunInfos::setup_2pol_Lfixed_Pconstr},
+      {"2polExt_LPcnstr", RunInfos::setup_2polExt_LPcnstr},
+      {"2polExt_LPfixed", RunInfos::setup_2polExt_LPfixed},
+      {"2polExt_Lconstr_Pfixed", RunInfos::setup_2polExt_Lconstr_Pfixed},
+      {"2polExt_Lfixed_Pconstr", RunInfos::setup_2polExt_Lfixed_Pconstr}}},
+    {"1pol",
+     {{"1pol_LPcnstr", RunInfos::setup_1pol_LPcnstr},
+      {"1pol_LPfixed", RunInfos::setup_1pol_LPfixed},
+      {"1pol_Lconstr_Pfixed", RunInfos::setup_1pol_Lconstr_Pfixed},
+      {"1pol_LPcnstr_P0fixed", RunInfos::setup_1pol_LPcnstr_P0fixed},
+      {"1pol_Lfixed_Pconstr", RunInfos::setup_1pol_Lfixed_Pconstr}}},
+    {"0pol",
+     {{"0pol_LPcnstr", RunInfos::setup_0pol_LPcnstr},
+      {"0pol_LPfixed", RunInfos::setup_0pol_LPfixed},
+      {"0pol_Lconstr_P0fixed", RunInfos::setup_0pol_Lconstr_P0fixed},
+      {"0pol_Lfixed_P0constr", RunInfos::setup_0pol_Lfixed_P0constr}}}};
 
 // -----------------------------------------------------------------------------
 
