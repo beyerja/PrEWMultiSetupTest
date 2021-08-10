@@ -1,3 +1,14 @@
+
+## Loading the necessary software
+
+A proper modern python version must be installed with common packages such as 
+matplotlib, and the less common package ROOT.
+
+On the NAF this can be done by running
+```bash
+source macros/load_env.sh
+```
+
 ## Python-based analysis code
 
 The Python code contained in `py` can be used to analyse the output from the multi-setup test.
