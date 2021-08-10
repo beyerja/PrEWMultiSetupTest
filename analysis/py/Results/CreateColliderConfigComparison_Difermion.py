@@ -259,7 +259,7 @@ def main():
                                      unpol_difparam_setups))
 
   # Output directories
-  output_dir = "{}/plots/ColliderConfigComparison".format(output_base)
+  output_dir = "{}/plots/ColliderConfigComparison/Difermion".format(output_base)
 
   scale = 1.e-4
   difermion_par_plot(mrr, output_dir, "81to101", "return-to-Z", scale)
