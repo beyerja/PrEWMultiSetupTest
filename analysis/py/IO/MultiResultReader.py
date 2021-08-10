@@ -1,5 +1,6 @@
 import logging as log
 import numpy as np
+from pathlib import Path
 from tqdm import tqdm
 
 # Find and import the PrEW output reader
@@ -21,6 +22,11 @@ def find_setup_result(result_dir, lumi_setup, run_setup, muacc_setup,
                                      difparam_setup)
   file_path = result_dir + "/" + file_name
   log.debug("Trying to read file " + file_path)
+  
+  if not Path(file_path).is_file():
+    log.debug("File not found.")
+    return None
+  
   reader = PrOut.Reader(file_path)
   reader.read()
   
@@ -47,14 +53,19 @@ class MultiResultReader:
       for run_setup in tqdm(run_setups, leave=False):
         for muacc_setup in tqdm(muacc_setups, leave=False):
           for difparam_setup in tqdm(difparam_setups, leave=False):
-            self.setup_results.append(
-              find_setup_result(result_dir, lumi_setup, run_setup, muacc_setup, 
-                                difparam_setup))           
+            setup_result = find_setup_result(result_dir, lumi_setup, run_setup, 
+                                             muacc_setup, difparam_setup)
+            # Only save result if it was found (meaning: not None)
+            if setup_result:
+              self.setup_results.append(setup_result)
                                 
     self.setup_results = np.array(self.setup_results)
      
-  
-    log.info("Found and read {} setup results.".format(len(self.setup_results)))
+    n_found = len(self.setup_results)
+    n_possible = len(lumi_setups) * len(run_setups) * len(muacc_setups)\
+                 * len(difparam_setups)
+    log.info("Found and read {} out of {} possible setup results.".format(
+              n_found, n_possible))
 
   def get(self, lumi, run_name, muacc_name, difparam_name):
     """ Find a specific setup using the IDs for all the setup components.
