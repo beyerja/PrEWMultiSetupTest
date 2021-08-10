@@ -2,6 +2,7 @@
 import Setups.DifParamSetup as IODPS
 import Setups.MuAccSetup as IOMAS
 import Setups.RunSetup as IORS
+import Setups.WWSetup as IOWWS
 
 default_lumi_setups = [
   1000,
@@ -42,10 +43,20 @@ default_pol_difparam_setups = [                         # s0, Ae, Af, ef, k0, dk
   IODPS.DifParamSetup("mumu_fixed_ks",                  "free", "free", "free", "free", "fixed", "fixed"),
   IODPS.DifParamSetup("mumu_LEPconstr_Ae_Af",           "free", "constrained", "constrained", "constrained", "constrained", "constrained", constr_type="LEP"),
   IODPS.DifParamSetup("mumu_LEPconstr_Ae_Af_fixed_ks",  "free", "constrained", "constrained", "constrained", "fixed", "fixed", constr_type="LEP"),
+  IODPS.DifParamSetup() # Dummy for case without mumu
 ]
 
 default_unpol_difparam_setups = [
   IODPS.DifParamSetup("mumu_ILCconstr_Ae_Af_ef_ks",       "free", "constrained", "constrained", "constrained", "constrained", "constrained", constr_type="ILC"),
   IODPS.DifParamSetup("mumu_ILCconstr_Ae_Af_ef_fixed_ks", "free", "constrained", "constrained", "constrained", "fixed", "fixed", constr_type="ILC"),
-  IODPS.DifParamSetup("mumu_AFB_k0_fixed_Ae_Af_dk",       "free", "fixed", "fixed", "free->AFB", "free->k0", "fixed")
+  IODPS.DifParamSetup("mumu_AFB_k0_fixed_Ae_Af_dk",       "free", "fixed", "fixed", "free->AFB", "free->k0", "fixed"),
+  IODPS.DifParamSetup() # Dummy for case without mumu
+]
+
+default_WW_setups = [                  # use_TGCs, use_s0, use_A
+  IOWWS.WWSetup("WWcTGCs_xs0Free_AFree", True, True, True),
+  IOWWS.WWSetup("WWcTGCs_xs0Free_AFixd", True, True, False),
+  IOWWS.WWSetup("WWcTGCs_xs0Fixd_AFree", True, False, True),
+  IOWWS.WWSetup("WWcTGCs_xs0Fixd_AFixd", True, False, False),
+  IOWWS.WWSetup() # Dummy for case without WW
 ]
