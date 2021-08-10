@@ -195,8 +195,6 @@ const std::map<std::string, RunInfoMap> default_run_setups{
      {{"2pol_LPcnstr", RunInfos::setup_2pol_LPcnstr},
       {"2pol_LPfixed", RunInfos::setup_2pol_LPfixed},
       {"2pol_Lconstr_Pfixed", RunInfos::setup_2pol_Lconstr_Pfixed},
-      {"2pol_Lconstr_Pfixed", RunInfos::setup_2pol_Lconstr_Pfixed},
-      {"2pol_Lconstr_Pfixed", RunInfos::setup_2pol_Lconstr_Pfixed},
       {"2pol_Lfixed_Pconstr", RunInfos::setup_2pol_Lfixed_Pconstr},
       {"2polExt_LPcnstr", RunInfos::setup_2polExt_LPcnstr},
       {"2polExt_LPfixed", RunInfos::setup_2polExt_LPfixed},
