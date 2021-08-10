@@ -26,7 +26,8 @@ file = open(summary_dir + "/result_summary.txt", "w")
 # Write each result
 for res in msr.setup_results:
   setup_out_name = IONC.setup_convention(res.lumi_setup, res.run_setup, 
-                                         res.muacc_setup, res.difparam_setup)
+                                         res.muacc_setup, res.difparam_setup, 
+                                         res.WW_setup)
   log.info("Checking: {}".format(setup_out_name))
   
   # Calculate a summary of the result (e.g. cor matrix, unc., ...)

@@ -12,14 +12,17 @@ import PrOut
 import IO.NamingConventions as IONC
 import IO.SetupResult as IOSR
 import Setups.DefaultSetups as SDS
+import Setups.DifParamSetup as IODPS
+import Setups.WWSetup as IOWWS
+
          
 def find_setup_result(result_dir, lumi_setup, run_setup, muacc_setup, 
-                      difparam_setup):
+                      difparam_setup, WW_setup):
   """ Find the setup result for the given setup combination in the given result
       directory.
   """
   file_name = IONC.infile_convention(lumi_setup, run_setup, muacc_setup, 
-                                     difparam_setup)
+                                     difparam_setup, WW_setup)
   file_path = result_dir + "/" + file_name
   log.debug("Trying to read file " + file_path)
   
@@ -37,15 +40,16 @@ def find_setup_result(result_dir, lumi_setup, run_setup, muacc_setup,
   result = reader.run_results[0]
   
   return IOSR.SetupResult(result, lumi_setup, run_setup, muacc_setup, 
-                          difparam_setup)
+                          difparam_setup, WW_setup)
 
 class MultiResultReader:
   """ Class that can read in the outputs produced from a large number of runs 
       with different setups.
   """
   
-  def __init__(self, result_dir, 
-               lumi_setups, run_setups, muacc_setups, difparam_setups):
+  def __init__(self, result_dir, lumi_setups, run_setups, muacc_setups, 
+               difparam_setups=[IODPS.DifParamSetup()], 
+               WW_setups=[IOWWS.WWSetup()]):
     self.setup_results = []
     
     log.info("Reading in setup results.")
@@ -53,31 +57,33 @@ class MultiResultReader:
       for run_setup in tqdm(run_setups, leave=False):
         for muacc_setup in tqdm(muacc_setups, leave=False):
           for difparam_setup in tqdm(difparam_setups, leave=False):
-            setup_result = find_setup_result(result_dir, lumi_setup, run_setup, 
-                                             muacc_setup, difparam_setup)
-            # Only save result if it was found (meaning: not None)
-            if setup_result:
-              self.setup_results.append(setup_result)
+            for WW_setup in tqdm(WW_setups, leave=False):
+              setup_result = find_setup_result(
+                              result_dir, lumi_setup, run_setup, muacc_setup, 
+                              difparam_setup, WW_setup)
+              # Only save result if it was found (meaning: not None)
+              if setup_result:
+                self.setup_results.append(setup_result)
                                 
     self.setup_results = np.array(self.setup_results)
      
     n_found = len(self.setup_results)
     n_possible = len(lumi_setups) * len(run_setups) * len(muacc_setups)\
-                 * len(difparam_setups)
+                 * len(difparam_setups) * len(WW_setups)
     log.info("Found and read {} out of {} possible setup results.".format(
               n_found, n_possible))
 
-  def get(self, lumi, run_name, muacc_name, difparam_name):
+  def get(self, lumi, run_name, muacc_name, difparam_name=None, WW_name=None):
     """ Find a specific setup using the IDs for all the setup components.
     """
     found = np.array([setup for setup in self.setup_results 
-                      if setup.equals(lumi,run_name,muacc_name,difparam_name)])
+              if setup.equals(lumi,run_name,muacc_name,difparam_name,WW_name)])
     if len(found) == 0:
-      raise Exception("No setup found for {} {} {} {}".format(
-                        lumi,run_name,muacc_name,difparam_name))
+      raise Exception("No setup found for {} {} {} {} {}".format(
+              lumi,run_name,muacc_name,difparam_name,WW_name))
     if len(found) > 1:
-      raise Exception("{} setups found for {} {} {} {}".format(
-                        len(found),lumi,run_name,muacc_name,difparam_name))
+      raise Exception("{} setups found for {} {} {} {} {}".format(
+              len(found),lumi,run_name,muacc_name,difparam_name,WW_name))
     return found[0]
   
   def append(self, other_mrr):
@@ -92,7 +98,8 @@ def get_default_pol_mrr(result_dir):
   """
   return MultiResultReader(result_dir, 
     SDS.default_lumi_setups, SDS.default_pol_run_setups,
-    SDS.default_muacc_setups, SDS.default_pol_difparam_setups)
+    SDS.default_muacc_setups, SDS.default_pol_difparam_setups,
+    SDS.default_WW_setups)
     
 def get_default_unpol_mrr(result_dir):
   """ Get the default MultiResultReader that contains are current results for 
@@ -100,7 +107,8 @@ def get_default_unpol_mrr(result_dir):
   """
   return MultiResultReader(result_dir, 
     SDS.default_lumi_setups, SDS.default_unpol_run_setups,
-    SDS.default_muacc_setups, SDS.default_unpol_difparam_setups)
+    SDS.default_muacc_setups, SDS.default_unpol_difparam_setups,
+    SDS.default_WW_setups)
     
 def get_default_mrr(result_dir):
   """ Get the default MultiResultReader that contains are current results.

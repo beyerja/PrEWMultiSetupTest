@@ -28,7 +28,9 @@ PDF.set_default_mpl_format()
 # Create summary plots for each result
 log.info("Creating plots for each setup.")
 for res in tqdm(msr.setup_results):
-  setup_out_name = IONC.setup_convention(res.lumi_setup, res.run_setup, res.muacc_setup, res.difparam_setup)
+  setup_out_name = IONC.setup_convention(res.lumi_setup, res.run_setup, 
+                                         res.muacc_setup, res.difparam_setup,
+                                         res.WW_setup)
   log.debug("Checking: {}".format(setup_out_name))
   
   # Calculate a summary of the result (e.g. cor matrix, unc., ...)
