@@ -1,7 +1,8 @@
 class DifParamSetup:
   """ Storage class for the difermion parametrisation setup.
   """
-  def __init__(self, name, s0_setup, Ae_setup, Af_setup, ef_setup, k0_setup, dk_setup, constr_type=None):
+  def __init__(self, name=None, s0_setup=None, Ae_setup=None, Af_setup=None, 
+               ef_setup=None, k0_setup=None, dk_setup=None, constr_type=None):
     self.name = name
     self.s0_setup = s0_setup
     self.Ae_setup = Ae_setup

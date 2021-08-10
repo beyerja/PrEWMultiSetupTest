@@ -1,7 +1,7 @@
 class RunSetup:
   """ Storage class for the a collider run setup.
   """
-  def __init__(self, name, PeM, PeP, L_setup, P_setup):
+  def __init__(self, name=None, PeM=None, PeP=None, L_setup=None, P_setup=None):
     self.name = name
     self.PeM = PeM
     self.PeP = PeP
