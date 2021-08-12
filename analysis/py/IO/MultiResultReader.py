@@ -1,4 +1,5 @@
 import logging as log
+import multiprocessing as mp
 import numpy as np
 from pathlib import Path
 from tqdm import tqdm
@@ -9,6 +10,7 @@ IOSH.find_PrOut()
 import PrOut
 
 # Local modules
+import MultiProc.ConfigHelp as MPCH
 import IO.NamingConventions as IONC
 import IO.SetupResult as IOSR
 import Setups.DefaultSetups as SDS
@@ -50,22 +52,29 @@ class MultiResultReader:
   def __init__(self, result_dir, lumi_setups, run_setups, muacc_setups, 
                difparam_setups=[IODPS.DifParamSetup()], 
                WW_setups=[IOWWS.WWSetup()]):
-    self.setup_results = []
     
     log.info("Reading in setup results.")
-    for lumi_setup in tqdm(lumi_setups):
-      for run_setup in tqdm(run_setups, leave=False):
-        for muacc_setup in tqdm(muacc_setups, leave=False):
-          for difparam_setup in tqdm(difparam_setups, leave=False):
-            for WW_setup in tqdm(WW_setups, leave=False):
-              setup_result = find_setup_result(
-                              result_dir, lumi_setup, run_setup, muacc_setup, 
-                              difparam_setup, WW_setup)
-              # Only save result if it was found (meaning: not None)
-              if setup_result:
-                self.setup_results.append(setup_result)
-                                
-    self.setup_results = np.array(self.setup_results)
+    pool = mp.Pool(MPCH.get_n_cores()) # Read them in parallel for speed-up
+    setup_result_objects = []
+    for lumi_setup in lumi_setups:
+      for run_setup in run_setups:
+        for muacc_setup in muacc_setups:
+          for difparam_setup in difparam_setups:
+            for WW_setup in WW_setups:
+              # Run these in parallel 
+              setup_result_objects.append(
+                pool.apply_async(find_setup_result, 
+                  args=( result_dir, lumi_setup, run_setup, muacc_setup, 
+                         difparam_setup, WW_setup )))
+                         
+    # Find results (from objects used for parallel programming)
+    setup_results = np.array([o.get() for o in tqdm(setup_result_objects)])
+                              
+    # Let all processes finish
+    pool.close()
+    pool.join()
+    
+    self.setup_results = np.delete(setup_results, setup_results==None)
      
     n_found = len(self.setup_results)
     n_possible = len(lumi_setups) * len(run_setups) * len(muacc_setups)\

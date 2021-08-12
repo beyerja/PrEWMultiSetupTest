@@ -1,4 +1,5 @@
 import logging as log
+import os
 import sys
 
 # Local modules
@@ -12,6 +13,8 @@ import IO.SysHelp as IOSH
 """
 
 log.basicConfig(level=log.INFO) # Set logging level
+os.environ["USE_N_CORES"] = "7"
+
 output_base = "../../../output"
 fit_output_base = "{}/run_outputs".format(output_base)
 msr = IOMRR.get_default_mrr(fit_output_base)

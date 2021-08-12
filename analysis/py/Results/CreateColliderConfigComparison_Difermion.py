@@ -2,6 +2,7 @@ from decimal import Decimal
 import logging as log
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 import sys
 
 # Local modules
@@ -216,6 +217,7 @@ def nuisance_par_plot(mrr, output_dir, scale):
 def main():
   log.basicConfig(level=log.INFO)
   PDF.set_default_mpl_format()
+  os.environ["USE_N_CORES"] = "7"
   
   output_base = "../../../output"
   fit_output_base = "{}/run_outputs".format(output_base)

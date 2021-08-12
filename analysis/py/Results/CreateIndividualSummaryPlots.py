@@ -1,4 +1,5 @@
 import logging as log
+import os
 import sys
 from tqdm import tqdm
 
@@ -15,6 +16,8 @@ import Plotting.SetupPlotting as PSP
 """
 
 log.basicConfig(level=log.INFO) # Set logging level
+os.environ["USE_N_CORES"] = "7"
+
 output_base = "../../../output"
 fit_output_base = "{}/run_outputs".format(output_base)
 msr = IOMRR.get_default_mrr(fit_output_base)
