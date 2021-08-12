@@ -74,7 +74,8 @@ class MultiResultReader:
     pool.close()
     pool.join()
     
-    self.setup_results = np.delete(setup_results, setup_results==None)
+    self.setup_results = np.delete(setup_results, 
+                                   np.array(setup_results, dtype=bool)==None)
      
     n_found = len(self.setup_results)
     n_possible = len(lumi_setups) * len(run_setups) * len(muacc_setups)\
