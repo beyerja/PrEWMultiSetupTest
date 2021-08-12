@@ -1,4 +1,5 @@
 import logging as log
+import multiprocessing as mp
 import os
 import sys
 from tqdm import tqdm
@@ -6,6 +7,7 @@ from tqdm import tqdm
 # Local modules
 sys.path.append("..") # Use the modules in the top level directory
 import Analysis.ResultSummary as ARS
+import MultiProc.ConfigHelp as MPCH
 import IO.MultiResultReader as IOMRR
 import IO.NamingConventions as IONC
 import Plotting.DefaultFormat as PDF
@@ -28,8 +30,11 @@ plot_base = "{}/plots".format(output_base)
 # Set the default matplotlib formatting
 PDF.set_default_mpl_format()
 
-# Create summary plots for each result
-log.info("Creating plots for each setup.")
+# Create summary plots for each result (using parallel programming)
+pool = mp.Pool(MPCH.get_n_cores())
+result_objects = []
+
+log.info("Starting processes to create plots for each setup.")
 for res in tqdm(msr.setup_results):
   setup_out_name = IONC.setup_convention(res.lumi_setup, res.run_setup, 
                                          res.muacc_setup, res.difparam_setup,
@@ -39,6 +44,17 @@ for res in tqdm(msr.setup_results):
   # Calculate a summary of the result (e.g. cor matrix, unc., ...)
   res_summary = ARS.ResultSummary(res.run_result)
   
-  # Create all the summary plots for this setup
+  # Create all the summary plots for this setup (in parallel process)
   plot_dir = "{}/SingleSetup/{}".format(plot_base,setup_out_name)
-  PSP.plot_res_summary(res_summary,plot_dir)
+  result_objects.append(
+    pool.apply_async(PSP.plot_res_summary, args=(res_summary,plot_dir)))
+  
+# "get" the result to get a tqdm counter of them finishing
+log.info("Running processes.")
+for r in tqdm(result_objects):
+  _ = r.get()
+  
+# Let all processes finish
+pool.close()
+pool.join()
+log.info("Done!")
