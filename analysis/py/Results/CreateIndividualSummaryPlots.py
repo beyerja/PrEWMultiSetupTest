@@ -18,7 +18,7 @@ import Plotting.SetupPlotting as PSP
 """
 
 log.basicConfig(level=log.INFO) # Set logging level
-os.environ["USE_N_CORES"] = "7"
+os.environ["USE_N_CORES"] = "10"
 
 output_base = "../../../output"
 fit_output_base = "{}/run_outputs".format(output_base)
@@ -31,6 +31,7 @@ plot_base = "{}/plots".format(output_base)
 PDF.set_default_mpl_format()
 
 # Create summary plots for each result (using parallel programming)
+os.environ["USE_N_CORES"] = "4" # Reduce the number of cores (goes crazy else)
 pool = mp.Pool(MPCH.get_n_cores())
 result_objects = []
 
