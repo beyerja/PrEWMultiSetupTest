@@ -6,6 +6,7 @@ import numpy as np
 
 # Local modules
 import IO.SysHelp as IOSH
+import Plotting.ParSymbolMapping as PPSM
 
 def plot_parameter(ax, res_summary, p):
   """ Create the summary plot for the single parameter of index p.
@@ -73,8 +74,9 @@ def plot_cor_matrix(cor_matrix, par_names, h_name, output_dir,
   ax.set_xticks(np.arange(n_pars))
   ax.set_yticks(np.arange(n_pars))
   # ... and label them with the respective list entries
-  ax.set_xticklabels(par_names)
-  ax.set_yticklabels(par_names)
+  par_symbols = PPSM.names_to_symbols(par_names)
+  ax.set_xticklabels(par_symbols)
+  ax.set_yticklabels(par_symbols)
 
   # Rotate the tick labels and set their alignment.
   plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
