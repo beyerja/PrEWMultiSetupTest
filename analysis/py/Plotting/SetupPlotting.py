@@ -14,8 +14,8 @@ def plot_parameter(ax, res_summary, p):
   p_min = res_summary.par_min[p]
   p_max = res_summary.par_max[p]
   
-  p_unc_clc = res_summary.unc_vec[p] # Calculated uncerainty
-  p_unc_fit = res_summary.fit_unc_avg[p] # Uncertainty average from fits
+  p_unc_clc = res_summary.unc_vec_calc[p] # Calculated uncerainty
+  p_unc_fit = res_summary.unc_vec_avg[p] # Uncertainty average from fits
   
   # x-axis minimum and maximum
   x_min = p_min - 0.1*(p_avg-p_min)
@@ -56,15 +56,16 @@ def plot_parameters(res_summary, output_dir, extensions=["pdf","png"]):
       fig.savefig("{}/{}/hist_{}.{}".format(output_dir,ext,res_summary.par_names[p],ext))
     plt.close(fig)
     
-def plot_cor_matrix(res_summary, output_dir, extensions=["pdf","png"]):
+def plot_cor_matrix(cor_matrix, par_names, h_name, output_dir, 
+                    extensions=["pdf","png"]):
   """ Plot the correlation matrix of a single setup run.
   """
   # Create figure for plots and adjust height and width
-  n_pars = len(res_summary.par_names)
+  n_pars = len(par_names)
   fig, ax = plt.subplots(figsize=np.array([8, 6.5])+0.45 * n_pars)
 
   # Plot a 2D color plot (sharp, no interpolations, using PRGn color map)
-  im_cor = ax.imshow(res_summary.cor_mat,interpolation='none',cmap='PRGn')
+  im_cor = ax.imshow(cor_matrix,interpolation='none',cmap='PRGn')
   cb_cor = fig.colorbar(im_cor, ax=ax) # Show what the colors mean
   im_cor.set_clim(-1, 1); # Correlations are between -1 and +1
 
@@ -72,8 +73,8 @@ def plot_cor_matrix(res_summary, output_dir, extensions=["pdf","png"]):
   ax.set_xticks(np.arange(n_pars))
   ax.set_yticks(np.arange(n_pars))
   # ... and label them with the respective list entries
-  ax.set_xticklabels(res_summary.par_names)
-  ax.set_yticklabels(res_summary.par_names)
+  ax.set_xticklabels(par_names)
+  ax.set_yticklabels(par_names)
 
   # Rotate the tick labels and set their alignment.
   plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
@@ -83,9 +84,22 @@ def plot_cor_matrix(res_summary, output_dir, extensions=["pdf","png"]):
   ax.set_title("Average correlation matrix")
   fig.tight_layout()
   for ext in extensions:
-    fig.savefig("{}/{}/hist_cor.{}".format(output_dir,ext,ext))
+    fig.savefig("{}/{}/{}.{}".format(output_dir,ext,h_name,ext))
   plt.close(fig)
-  
+
+def plot_cor_matrix_avg(res_summary, output_dir, extensions=["pdf","png"]):
+  """ Plot the correlation matrix of a single setup run, calculated by averaging
+      over the correlation matrices of all fits.
+  """
+  plot_cor_matrix(res_summary.cor_mat_avg, res_summary.par_names, 
+                  "hist_cor_avg", output_dir, extensions)
+    
+def plot_cor_matrix_calc(res_summary, output_dir, extensions=["pdf","png"]):
+  """ Plot the correlation matrix of a single setup run, calculated from the
+      final fit result points.
+  """
+  plot_cor_matrix(res_summary.cor_mat_calc, res_summary.par_names, 
+                  "hist_cor_calc", output_dir, extensions)
 
 def plot_nll_ndf(res_summary, output_dir, extensions=["pdf","png"]):
   """ Plot the negative log likelihood (/ degrees of freedom) for a single setup 
@@ -192,7 +206,8 @@ def plot_res_summary(res_summary, output_dir, extensions=["pdf","png"]):
   """ Create all summary and check plots for the given result summary.
   """
   plot_parameters(res_summary, output_dir, extensions)
-  plot_cor_matrix(res_summary, output_dir, extensions)
+  plot_cor_matrix_avg(res_summary, output_dir, extensions)
+  plot_cor_matrix_calc(res_summary, output_dir, extensions)
   plot_nll_ndf(res_summary, output_dir, extensions)
   plot_cov_status(res_summary, output_dir, extensions)
   plot_min_status(res_summary, output_dir, extensions)

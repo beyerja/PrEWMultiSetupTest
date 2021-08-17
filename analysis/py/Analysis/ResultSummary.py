@@ -20,10 +20,12 @@ class ResultSummary:
     
     # Covariance matrix related things
     result_vals = np.array([fr.pars_fin for fr in run_result.fit_results])    
-    self.cov_mat = ACMC.calc_cov_mat(result_vals)
-    self.cor_mat = ACMC.calc_cor_mat(self.cov_mat)
-    self.unc_vec = ACMC.calc_std_dev(self.cov_mat)
-    self.fit_unc_avg = np.average(np.array([fr.uncs_fin for fr in run_result.fit_results]), axis=0)
+    self.cov_mat_calc = ACMC.calc_cov_mat(result_vals) # TODO Check where this was used and replace everywhere!
+    self.cor_mat_calc = ACMC.calc_cor_mat(self.cov_mat_calc)
+    self.unc_vec_calc = ACMC.calc_std_dev(self.cov_mat_calc)
+    self.cov_mat_avg = np.average(np.array([fr.cov_matrix for fr in run_result.fit_results]), axis=0)
+    self.cor_mat_avg = np.average(np.array([fr.cor_matrix for fr in run_result.fit_results]), axis=0)
+    self.unc_vec_avg = np.average(np.array([fr.uncs_fin for fr in run_result.fit_results]), axis=0)
     self.consistency_check()
     
     # Fit behaviour related things
@@ -39,15 +41,15 @@ class ResultSummary:
         makes sense and is somewhat constistence with what the fit says.
     """
     # Is covariance matrix symmetric
-    if not ANH.is_symmetric(self.cov_mat):
-      log.warning("Covariance matrix not symmetric ", self.cov_mat)
+    if not ANH.is_symmetric(self.cov_mat_calc):
+      log.warning("Covariance matrix not symmetric ", self.cov_mat_calc)
     
     # Are calculated uncertainties equal to those found by fit?
     rel_tolerance = 0.15
-    if not np.allclose(self.fit_unc_avg,self.unc_vec,rtol=rel_tolerance):
+    if not np.allclose(self.unc_vec_avg,self.unc_vec_calc,rtol=rel_tolerance):
       log.debug("Calculated uncertainty deviates more than {}% from the one that the fit calculated.".format(rel_tolerance*100))
-      log.debug("Own calc: {}".format(self.unc_vec))
-      log.debug("Fit calc: {}".format(self.fit_unc_avg))
+      log.debug("Own calc: {}".format(self.unc_vec_calc))
+      log.debug("Fit calc: {}".format(self.unc_vec_avg))
       
   def par_index(self, par_name):
     """ Return the index of the given parameter.
@@ -67,7 +69,7 @@ class ResultSummary:
   def fit_unc(self, par_name):
     """ Return the uncertainty for the given parameter.
     """
-    return self.fit_unc_avg[self.par_index(par_name)]
+    return self.unc_vec_avg[self.par_index(par_name)]
       
   def __str__(self):
     """ Make this class printable.
@@ -76,8 +78,8 @@ class ResultSummary:
     out =  "Par. names  : {}\n".format(self.par_names)
     out += "Par. results: {}\n".format(self.par_avg)
     out += "Calc.    unc: {}\n".format(self.unc_vec)
-    out += "Avg. fit unc: {}\n".format(self.fit_unc_avg)
-    out += "Cor.mat.:\n{}\n".format(self.cor_mat)
+    out += "Avg. fit unc: {}\n".format(self.unc_vec_avg)
+    out += "Avg. cor.mat.:\n{}\n".format(self.cor_mat_avg)
     
     out += "Avg. NLL/ndf: {}\n".format(np.average(self.nll)/self.ndf)
     out += "Cov. status: "
