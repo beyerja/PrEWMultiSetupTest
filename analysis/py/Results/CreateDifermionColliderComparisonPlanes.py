@@ -1,0 +1,251 @@
+import logging as log
+import matplotlib.pyplot as plt
+import numpy as np
+import os
+import sys
+
+# Local modules
+sys.path.append("..") # Use the modules in the top level directory
+import IO.MultiResultReader as IOMRR
+import IO.SysHelp as IOSH
+import Plotting.DefaultFormat as PDF
+import Plotting.Statistics as PS
+import Setups.DifParamSetup as IODPS
+import Setups.MuAccSetup as IOMAS
+import Setups.RunSetup as IORS
+
+#-------------------------------------------------------------------------------
+
+# True values of the difermion parameters
+truth_vals = {
+  "return-to-Z": {
+    "Ae": 0.21360014,
+    "Af": 0.20281099,
+    "ef": 0.01580906,
+    "k0": 0.07471141,
+    "dk": 0.00059199,
+  },
+  r"high-$\sqrt{s*}$": {
+    "Ae" : 0.11251847,
+    "Af" : 0.03217479,
+    "ef" : 1.42594481,
+    "k0" : 0.00033356,
+    "dk" : 0.00031470,
+  }
+}
+
+#-------------------------------------------------------------------------------
+
+def Af_fromAFB(AFB, Ae, ef):
+  """ Calculate Af from AFB for given Ae and epsilon_f.
+  """
+  return (AFB - ef) / (2 * Ae)
+  
+#-------------------------------------------------------------------------------
+
+def draw_ellipse(ax, rs, Ae_name, Af_name, mass_label, **kwargs):
+  """ Draw the Ae, Af covariance matrix ellipse for a given result summary.
+  """
+  i_Ae = rs.par_index(Ae_name)
+  i_Af = rs.par_index(Af_name)
+  full_cov = rs.cov_mat_avg
+  AeAf_cov = np.array([[full_cov[i_Ae,i_Ae],full_cov[i_Af,i_Ae]],
+                       [full_cov[i_Ae,i_Af],full_cov[i_Af,i_Af]]])
+                       
+  mean_Ae = truth_vals[mass_label]["Ae"]
+  mean_Af = truth_vals[mass_label]["Af"]
+  PS.confidence_ellipse(AeAf_cov, mean_Ae, mean_Af, ax, n_std=1.0, **kwargs)
+
+def draw_unpol_range(ax, rs, AFB_name, mass_label, **kwargs):
+  """ Draw the range that the unpolarised collider can constrain in the Ae/Af
+      plane, assuming epsilon_f to be known perfectly. 
+  """
+  
+  # Determine the upper and lower Ae/Af bands
+  i_AFB = rs.par_index(AFB_name)
+  
+  unc_AFB = rs.unc_vec_avg[i_AFB]
+  val_AFB = rs.par_avg[i_AFB]
+  AFB_low = val_AFB - unc_AFB 
+  AFB_up = val_AFB + unc_AFB 
+
+  Ae_min, Ae_max = ax.get_xlim()
+  Ae_vals = np.linspace(Ae_min, Ae_max, 500)
+  
+  ef = truth_vals[mass_label]["ef"]
+  Af_low = Af_fromAFB(AFB_low, Ae_vals, ef)
+  Af_up = Af_fromAFB(AFB_up, Ae_vals, ef)
+  
+  # Draw the two bands
+  p_low = ax.plot(Ae_vals, Af_low, **kwargs)
+  kwargs['color'] = p_low[0].get_color()
+  del kwargs['label']
+  p_up = ax.plot(Ae_vals, Af_up, **kwargs)
+  
+  # Reset the x limits
+  ax.set_xlim(Ae_min, Ae_max)
+  
+def adjust_ebar(ebar, ls):
+  """ Adjust the given errorbar linestyle.
+  """
+  ebar[-1][0].set_linestyle(ls)
+  return ebar
+  
+def draw_unpol_opt(ax, rs, AFB_name, mass_label, set_axlims=False, **kwargs):
+  """ Draw optimistic errorbars for the unpolarised scenarios assuming Ae or Af 
+      perfectly known / fixed.
+  """
+  i_AFB = rs.par_index(AFB_name)
+  unc_AFB = rs.unc_vec_avg[i_AFB]
+  
+  Ae = truth_vals[mass_label]["Ae"]
+  Af = truth_vals[mass_label]["Af"]
+  
+  # Simple Gaussian error propagation
+  unc_Ae = unc_AFB / (2 * Af)
+  unc_Af = unc_AFB / (2 * Ae)
+  
+  xlims = ax.get_xlim()
+  ylims = ax.get_ylim()
+  if set_axlims:
+    xlims = [Ae - 1.2 * unc_Ae, Ae + 1.2 * unc_Ae]
+    ylims = [Af - 1.2 * unc_Af, Af + 1.2 * unc_Af]
+  
+  labels=[None, None]
+  if 'label' in kwargs:
+    base_label = kwargs['label']
+    labels = [
+      "{}, {{$A_f,\epsilon_f$}} fixed".format(base_label),
+      "{}, {{$A_e,\epsilon_f$}} fixed".format(base_label)
+    ]
+    del kwargs['label']
+  
+  adjust_ebar(ax.errorbar([Ae],[Af],xerr=unc_Ae,label=labels[0],**kwargs),ls='dotted')
+  adjust_ebar(ax.errorbar([Ae],[Af],yerr=unc_Af,label=labels[1],**kwargs),ls='dashed')
+  
+  ax.set_xlim(xlims)
+  ax.set_ylim(ylims)
+
+def draw_setups(mrr, ax, Ae_name, Af_name, AFB_name, mass_label):
+  """ Draw all the different visualisations for the Ae-Af uncertainties from the 
+      different collider setups.
+  """ 
+  # Recover all result summaries 
+  rs_2polExt = mrr.get(2000, "2polExt_LPcnstr", "MuAccFree", "mumu_free").result_summary()
+  rs_2pol = mrr.get(2000, "2pol_LPcnstr", "MuAccFree", "mumu_free").result_summary()
+  rs_1pol = mrr.get(2000, "1pol_LPcnstr", "MuAccFree", "mumu_free").result_summary()
+  rs_0pol_2 = mrr.get(2000, "0pol_LPcnstr", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_dk").result_summary()
+  rs_0pol_10 = mrr.get(10000, "0pol_LPcnstr", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_dk").result_summary()
+
+  # Get the colors of the color cycle (to get manual control over them)
+  colors =  plt.rcParams['axes.prop_cycle'].by_key()['color']
+  
+  # Draw the polarised setups as ellipses
+  draw_ellipse(ax, rs_1pol, Ae_name, Af_name, mass_label, ls="-", lw=5.0, edgecolor=colors[2], facecolor='none', label="(80,0), 2ab$^{-1}$", zorder=2)
+  draw_ellipse(ax, rs_2pol, Ae_name, Af_name, mass_label, ls="-", lw=5.0, edgecolor=colors[1], facecolor='none', label="(80,30), 2ab$^{-1}$", zorder=2)
+  draw_ellipse(ax, rs_2polExt, Ae_name, Af_name, mass_label, ls="-", lw=5.0, edgecolor=colors[0], facecolor='none', label="(80/0,30/0), 2ab$^{-1}$", zorder=2)
+
+  # Draw optimistic and less optimistic limits for the unpolarised setups
+  draw_unpol_opt(ax, rs_0pol_2, AFB_name, mass_label, color=colors[3], lw=5, capsize=15, capthick=5, alpha=0.9, label="(0,0), 2ab$^{-1}$", ls='none', set_axlims=True)
+  draw_unpol_opt(ax, rs_0pol_10, AFB_name, mass_label, color=colors[4], lw=5, capsize=15, capthick=5, alpha=0.9, label="(0,0), 10ab$^{-1}$", ls='none')
+  
+  draw_unpol_range(ax, rs_0pol_2, AFB_name, mass_label, lw=5.0, color=colors[3], label="(0,0), 2ab$^{-1}$, $\epsilon_f$ fixed", zorder=1)
+  draw_unpol_range(ax, rs_0pol_10, AFB_name, mass_label, lw=5.0, color=colors[4], label="(0,0), 10ab$^{-1}$, $\epsilon_f$ fixed", zorder=1)
+  
+def draw_true_point(ax, mass_label, **kwargs):
+  """ Mark the true Ae-Af point on the plot.
+  """
+  if mass_label in truth_vals:
+    ax.plot([truth_vals[mass_label]["Ae"]],[truth_vals[mass_label]["Af"]], 
+            **kwargs)
+  else:
+    raise Exception("Unknown label {}".format(mass_label))
+
+#-------------------------------------------------------------------------------
+
+def reorder_legend_handles(ax):
+  """ Reorder the legend handles to make the legend look more orderly.
+  """
+  handles, _ = ax.get_legend_handles_labels()
+  reordering = [3,4,5,2,1,8,9,0,6,7]
+  return [handles[i] for i in reordering]
+
+#-------------------------------------------------------------------------------
+
+def AeAf_comparison_plot(mrr, output_dir, mass_range, label, scale):
+  """ Create the Ae - Af plane comparison plot for the different collider 
+      setups.
+  """
+  # Figure basics
+  fig = plt.figure(figsize=(12.5,12.5), tight_layout=True)
+  ax = plt.gca()
+  ax.set_xlabel("$A_e$")
+  ax.set_ylabel("$A_{\mu}$")
+
+  # Get the parameter names
+  par_base_names = np.array([
+   "s0_2f_mu", "Ae_2f_mu", "Af_2f_mu", "ef_2f_mu", "AFB_2f_mu", "k0_2f_mu", "dk_2f_mu"])
+  par_names = np.array(["{}_{}".format(par,mass_range) for par in par_base_names])
+  s0_name, Ae_name, Af_name, ef_name, AFB_name, k0_name, dk_name = par_names 
+
+  # Draw all the necessary lines
+  draw_setups(mrr, ax, Ae_name, Af_name, AFB_name, label)
+  draw_true_point(ax, label, marker="X", ls="none", ms=15, color="black", label="Truth")
+
+  # Create a useful legend
+  handles = reorder_legend_handles(ax)
+  legend = plt.legend(handles=handles, ncol=3, title="$e^+e^-\\rightarrow\mu^+\mu^-$ ({}) - $(P_{{e^-}}[\%],P_{{e^+}}[\%])$, $L$".format(label), fontsize=17, title_fontsize=17, bbox_to_anchor=(-0.18, 1.02), loc='lower left')
+
+  # Save the plot in files
+  for out_format in ["pdf","png"]:
+    format_dir = "{}/{}".format(output_dir,out_format)
+    IOSH.create_dir(format_dir)
+    fig.savefig("{}/2f_pars_{}.{}".format(format_dir,mass_range,out_format), transparent=True)
+  plt.close(fig)
+
+#-------------------------------------------------------------------------------
+
+def main():
+  log.basicConfig(level=log.INFO)
+  PDF.set_default_mpl_format()
+  os.environ["USE_N_CORES"] = "7"
+  
+  output_base = "../../../output"
+  fit_output_base = "{}/run_outputs".format(output_base)
+  
+  pol_lumi_setups = [ 2000 ]
+  unpol_lumi_setups = [ 2000, 10000 ]
+  pol_run_setups = [
+    IORS.RunSetup("2polExt_LPcnstr", 80, 30, "constrained", "constrained"),
+    IORS.RunSetup("2pol_LPcnstr", 80, 30, "constrained", "constrained"),
+    IORS.RunSetup("1pol_LPcnstr", 80,  0, "constrained", "constrained"),
+  ]
+  unpol_run_setups = [
+    IORS.RunSetup("0pol_LPcnstr",  0,  0, "constrained", "constrained"),
+  ]
+  muacc_setups = [
+    IOMAS.MuAccSetup("MuAccFree", 0.9925, "free", "free"),
+  ]
+  pol_difparam_setups = [
+    IODPS.DifParamSetup("mumu_free",                  "free", "free", "free", "free", "free", "free")
+  ]
+  unpol_difparam_setups = [
+    IODPS.DifParamSetup("mumu_AFB_k0_fixed_Ae_Af_dk", "free", "fixed", "fixed", "free->AFB", "free->k0", "fixed")
+  ]
+  
+  mrr = IOMRR.MultiResultReader(fit_output_base, pol_lumi_setups, 
+                                pol_run_setups, muacc_setups, 
+                                pol_difparam_setups)
+  mrr.append(IOMRR.MultiResultReader(fit_output_base, unpol_lumi_setups, 
+                                     unpol_run_setups, muacc_setups, 
+                                     unpol_difparam_setups))
+
+  # Output directories
+  output_dir = "{}/plots/DifermionPlaneComparison".format(output_base)
+
+  scale = 1.e-4
+  AeAf_comparison_plot(mrr, output_dir, "81to101", "return-to-Z", scale)
+  AeAf_comparison_plot(mrr, output_dir, "180to275", r"high-$\sqrt{s*}$", scale)
+  
+if __name__ == "__main__":
+  main()
