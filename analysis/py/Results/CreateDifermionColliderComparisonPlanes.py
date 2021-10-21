@@ -56,6 +56,36 @@ def draw_ellipse(ax, rs, Ae_name, Af_name, mass_label, **kwargs):
   mean_Af = truth_vals[mass_label]["Af"]
   PS.confidence_ellipse(AeAf_cov, mean_Ae, mean_Af, ax, n_std=1.0, **kwargs)
 
+def draw_FCCee_TeraZ(ax, scale=1.0, **kwargs):
+  """ Draw the expected result for the FCCee Tera-Z.
+      Ref: https://indico.desy.de/event/28202/contributions/105242/attachments/67362/83709/Eysermans_EWKPhysics_EPS_26072021.pdf
+      Assumes an AFB measurement in the mumu channel of 4 * 10^-6,
+      and an independent measurement of Ae from tau polarisation.
+      For the Ae uncertainty I take the LEP uncertainty on Ae from tau
+      polarisation (~0.005) and devide it by the increased statistics (10^7 more
+      Z events at FCC-ee Tera-Z).
+  """
+  unc_AFB = 4.e-6
+  unc_Ae = 5.e-3 / np.sqrt(1.e7) # ~ 1.5e-6
+  
+  Ae = truth_vals["return-to-Z"]["Ae"]
+  Af = truth_vals["return-to-Z"]["Af"]
+  ef = truth_vals["return-to-Z"]["ef"]
+  AFB = ef - 2 * Ae * Af
+  
+  # Transform the covariance matrix from AFB:Ae to Amu:Ae
+  cov_AeAFB = np.array([[unc_Ae**2, 0.],
+                        [0.,        unc_AFB**2]])
+  transf_mat = np.array([[1.,         0.],
+                         [-1./(2.*Ae**2) * (AFB - ef), 1./(2.*Ae)]])
+  cov_AeAf = np.matmul(np.matmul(transf_mat, cov_AeAFB), transf_mat.T) 
+  cov_AeAf_scaled = cov_AeAf * scale**2
+  
+  # print(np.sqrt(cov_AeAf))
+  # print(cov_AeAf[0][1] / np.sqrt(cov_AeAf[0][0]) / np.sqrt(cov_AeAf[1][1]))
+  
+  PS.confidence_ellipse(cov_AeAf_scaled, Ae, Af, ax, n_std=1.0, **kwargs)
+
 def draw_unpol_range(ax, rs, AFB_name, mass_label, **kwargs):
   """ Draw the range that the unpolarised collider can constrain in the Ae/Af
       plane, assuming epsilon_f to be known perfectly. 
@@ -115,12 +145,12 @@ def draw_unpol_opt(ax, rs, AFB_name, mass_label, set_axlims=False, **kwargs):
   if 'label' in kwargs:
     base_label = kwargs['label']
     labels = [
-      "{}, {{$A_f,\epsilon_f$}} fixed".format(base_label),
-      "{}, {{$A_e,\epsilon_f$}} fixed".format(base_label)
+      "{}, {{$A_{{\mu}},\epsilon_{{\mu}}$}} fixed".format(base_label),
+      "{}, {{$A_e,\epsilon_{{\mu}}$}} fixed".format(base_label)
     ]
     del kwargs['label']
   
-  adjust_ebar(ax.errorbar([Ae],[Af],xerr=unc_Ae,label=labels[0],**kwargs),ls='dotted')
+  # adjust_ebar(ax.errorbar([Ae],[Af],xerr=unc_Ae,label=labels[0],**kwargs),ls='dotted')
   adjust_ebar(ax.errorbar([Ae],[Af],yerr=unc_Af,label=labels[1],**kwargs),ls='dashed')
   
   ax.set_xlim(xlims)
@@ -149,8 +179,12 @@ def draw_setups(mrr, ax, Ae_name, Af_name, AFB_name, mass_label):
   draw_unpol_opt(ax, rs_0pol_2, AFB_name, mass_label, color=colors[3], lw=5, capsize=15, capthick=5, alpha=0.9, label="(0,0), 2ab$^{-1}$", ls='none', set_axlims=True)
   draw_unpol_opt(ax, rs_0pol_10, AFB_name, mass_label, color=colors[4], lw=5, capsize=15, capthick=5, alpha=0.9, label="(0,0), 10ab$^{-1}$", ls='none')
   
-  draw_unpol_range(ax, rs_0pol_2, AFB_name, mass_label, lw=5.0, color=colors[3], label="(0,0), 2ab$^{-1}$, $\epsilon_f$ fixed", zorder=1)
-  draw_unpol_range(ax, rs_0pol_10, AFB_name, mass_label, lw=5.0, color=colors[4], label="(0,0), 10ab$^{-1}$, $\epsilon_f$ fixed", zorder=1)
+  draw_unpol_range(ax, rs_0pol_2, AFB_name, mass_label, lw=5.0, color=colors[3], label="(0,0), 2ab$^{-1}$, $\epsilon_{\mu}$ fixed", zorder=1)
+  draw_unpol_range(ax, rs_0pol_10, AFB_name, mass_label, lw=5.0, color=colors[4], label="(0,0), 10ab$^{-1}$, $\epsilon_{\mu}$ fixed", zorder=1)
+  
+  if mass_label == "return-to-Z":
+    scale = 100.
+    draw_FCCee_TeraZ(ax, scale=scale, label="FCCee (Tera-Z) x{}, $\epsilon_{{\mu}}$ fixed".format(int(scale)), zorder=3, ls="-", lw=5.0, edgecolor=colors[5], facecolor='none')
   
 def draw_true_point(ax, mass_label, **kwargs):
   """ Mark the true Ae-Af point on the plot.
@@ -167,7 +201,13 @@ def reorder_legend_handles(ax):
   """ Reorder the legend handles to make the legend look more orderly.
   """
   handles, _ = ax.get_legend_handles_labels()
-  reordering = [3,4,5,2,1,8,9,0,6,7]
+  if (len(handles) == 9):
+    reordering = [3,4,5,1,8,6,0,7,2]
+  elif (len(handles) == 8):
+    reordering = [3,4,5,0,6,2,1,7]
+  else:
+    raise Exception("Not prepared for {} labels.".format(len(handles)))
+    
   return [handles[i] for i in reordering]
 
 #-------------------------------------------------------------------------------
