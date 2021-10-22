@@ -86,6 +86,28 @@ def draw_FCCee_TeraZ(ax, scale=1.0, **kwargs):
   
   PS.confidence_ellipse(cov_AeAf_scaled, Ae, Af, ax, n_std=1.0, **kwargs)
 
+def draw_ILC_GigaZ(ax, scale=1.0, **kwargs):
+  """ Draw the expected result for the ILC Giga-Z.
+      Ref: https://arxiv.org/pdf/1905.00220.pdf
+      Assumes that the A_e and A_mu measurements are uncorrelated (which is 
+      likely).
+  """
+  unc_Ae = 1.e-4
+  unc_Amu = 3.e-4
+  
+  Ae = truth_vals["return-to-Z"]["Ae"]
+  Af = truth_vals["return-to-Z"]["Af"]
+  
+  # Transform the covariance matrix from AFB:Ae to Amu:Ae
+  cov_AeAf = np.array([[unc_Ae**2, 0.],
+                       [0.,        unc_Amu**2]])
+  cov_AeAf_scaled = cov_AeAf * scale**2
+  
+  # print(np.sqrt(cov_AeAf))
+  # print(cov_AeAf[0][1] / np.sqrt(cov_AeAf[0][0]) / np.sqrt(cov_AeAf[1][1]))
+  
+  PS.confidence_ellipse(cov_AeAf_scaled, Ae, Af, ax, n_std=1.0, **kwargs)
+
 def draw_unpol_range(ax, rs, AFB_name, mass_label, **kwargs):
   """ Draw the range that the unpolarised collider can constrain in the Ae/Af
       plane, assuming epsilon_f to be known perfectly. 
@@ -151,12 +173,12 @@ def draw_unpol_opt(ax, rs, AFB_name, mass_label, set_axlims=False, **kwargs):
     del kwargs['label']
   
   # adjust_ebar(ax.errorbar([Ae],[Af],xerr=unc_Ae,label=labels[0],**kwargs),ls='dotted')
-  adjust_ebar(ax.errorbar([Ae],[Af],yerr=unc_Af,label=labels[1],**kwargs),ls='dashed')
+  adjust_ebar(ax.errorbar([Ae],[Af],yerr=unc_Af,label=labels[1],**kwargs),ls=':')
   
   ax.set_xlim(xlims)
   ax.set_ylim(ylims)
 
-def draw_setups(mrr, ax, Ae_name, Af_name, AFB_name, mass_label):
+def draw_setups(mrr, ax, Ae_name, Af_name, AFB_name, mass_label, draw_colliders=False):
   """ Draw all the different visualisations for the Ae-Af uncertainties from the 
       different collider setups.
   """ 
@@ -173,7 +195,7 @@ def draw_setups(mrr, ax, Ae_name, Af_name, AFB_name, mass_label):
   # Draw the polarised setups as ellipses
   draw_ellipse(ax, rs_1pol, Ae_name, Af_name, mass_label, ls="-", lw=5.0, edgecolor=colors[2], facecolor='none', label="(80,0), 2ab$^{-1}$", zorder=2)
   draw_ellipse(ax, rs_2pol, Ae_name, Af_name, mass_label, ls="-", lw=5.0, edgecolor=colors[1], facecolor='none', label="(80,30), 2ab$^{-1}$", zorder=2)
-  draw_ellipse(ax, rs_2polExt, Ae_name, Af_name, mass_label, ls="-", lw=5.0, edgecolor=colors[0], facecolor='none', label="(80/0,30/0), 2ab$^{-1}$", zorder=2)
+  draw_ellipse(ax, rs_2polExt, Ae_name, Af_name, mass_label, ls="-", lw=4.0, edgecolor=colors[0], facecolor='none', label="(80/0,30/0), 2ab$^{-1}$", zorder=2)
 
   # Draw optimistic and less optimistic limits for the unpolarised setups
   draw_unpol_opt(ax, rs_0pol_2, AFB_name, mass_label, color=colors[3], lw=5, capsize=15, capthick=5, alpha=0.9, label="(0,0), 2ab$^{-1}$", ls='none', set_axlims=True)
@@ -182,9 +204,16 @@ def draw_setups(mrr, ax, Ae_name, Af_name, AFB_name, mass_label):
   draw_unpol_range(ax, rs_0pol_2, AFB_name, mass_label, lw=5.0, color=colors[3], label="(0,0), 2ab$^{-1}$, $\epsilon_{\mu}$ fixed", zorder=1)
   draw_unpol_range(ax, rs_0pol_10, AFB_name, mass_label, lw=5.0, color=colors[4], label="(0,0), 10ab$^{-1}$, $\epsilon_{\mu}$ fixed", zorder=1)
   
-  if mass_label == "return-to-Z":
-    scale = 100.
-    draw_FCCee_TeraZ(ax, scale=scale, label="FCCee (Tera-Z) x{}, $\epsilon_{{\mu}}$ fixed".format(int(scale)), zorder=3, ls="-", lw=5.0, edgecolor=colors[5], facecolor='none')
+  if (mass_label == "return-to-Z") and draw_colliders:
+    scale_FCCee = 100.
+    arxiv_FCCee = "1601.03849"
+    draw_FCCee_TeraZ(ax, scale=scale_FCCee, label="FCCee (Tera-Z) x{}, $\epsilon_{{\mu}}$ fixed\narXiv:{}".format(int(scale_FCCee),arxiv_FCCee), zorder=3, ls="--", lw=5.0, edgecolor=colors[5], facecolor='none')
+    scale_ILC = 5.
+    arxiv_ILC = "1905.00220"
+    draw_ILC_GigaZ(ax, scale=scale_ILC, label="ILC (Giga-Z) x{}\narXiv:{}".format(int(scale_ILC),arxiv_ILC), zorder=3, ls="--", lw=5.0, edgecolor=colors[6], facecolor='none')
+  else:
+    ax.plot([],[],color="white",label=" ",zorder=3)
+    ax.plot([],[],color="white",label=" ",zorder=3)
   
 def draw_true_point(ax, mass_label, **kwargs):
   """ Mark the true Ae-Af point on the plot.
@@ -197,12 +226,14 @@ def draw_true_point(ax, mass_label, **kwargs):
 
 #-------------------------------------------------------------------------------
 
-def reorder_legend_handles(ax):
+def reorder_legend_handles(ax, draw_colliders=False):
   """ Reorder the legend handles to make the legend look more orderly.
   """
   handles, _ = ax.get_legend_handles_labels()
-  if (len(handles) == 9):
-    reordering = [3,4,5,1,8,6,0,7,2]
+  if (len(handles) == 10) and draw_colliders:
+    reordering = [3,4,5,2,0,8,6,1,9,7]
+  elif (len(handles) == 10) and not draw_colliders:
+    reordering = [5,6,7,4,0,8,3,1,9,2]
   elif (len(handles) == 8):
     reordering = [3,4,5,0,6,2,1,7]
   else:
@@ -212,7 +243,7 @@ def reorder_legend_handles(ax):
 
 #-------------------------------------------------------------------------------
 
-def AeAf_comparison_plot(mrr, output_dir, mass_range, label, scale):
+def AeAf_comparison_plot(mrr, output_dir, mass_range, label, draw_colliders=False):
   """ Create the Ae - Af plane comparison plot for the different collider 
       setups.
   """
@@ -229,18 +260,19 @@ def AeAf_comparison_plot(mrr, output_dir, mass_range, label, scale):
   s0_name, Ae_name, Af_name, ef_name, AFB_name, k0_name, dk_name = par_names 
 
   # Draw all the necessary lines
-  draw_setups(mrr, ax, Ae_name, Af_name, AFB_name, label)
+  draw_setups(mrr, ax, Ae_name, Af_name, AFB_name, label, draw_colliders)
   draw_true_point(ax, label, marker="X", ls="none", ms=15, color="black", label="Truth")
 
   # Create a useful legend
-  handles = reorder_legend_handles(ax)
+  handles = reorder_legend_handles(ax, draw_colliders)
   legend = plt.legend(handles=handles, ncol=3, title="$e^+e^-\\rightarrow\mu^+\mu^-$ ({}) - $(P_{{e^-}}[\%],P_{{e^+}}[\%])$, $L$".format(label), fontsize=17, title_fontsize=17, bbox_to_anchor=(-0.18, 1.02), loc='lower left')
 
   # Save the plot in files
   for out_format in ["pdf","png"]:
     format_dir = "{}/{}".format(output_dir,out_format)
     IOSH.create_dir(format_dir)
-    fig.savefig("{}/2f_pars_{}.{}".format(format_dir,mass_range,out_format), transparent=True)
+    collider_str = "_wColliders" if draw_colliders else ""
+    fig.savefig("{}/2f_pars_{}{}.{}".format(format_dir,mass_range,collider_str,out_format), transparent=True)
   plt.close(fig)
 
 #-------------------------------------------------------------------------------
@@ -283,9 +315,9 @@ def main():
   # Output directories
   output_dir = "{}/plots/DifermionPlaneComparison".format(output_base)
 
-  scale = 1.e-4
-  AeAf_comparison_plot(mrr, output_dir, "81to101", "return-to-Z", scale)
-  AeAf_comparison_plot(mrr, output_dir, "180to275", r"high-$\sqrt{s*}$", scale)
+  AeAf_comparison_plot(mrr, output_dir, "81to101", "return-to-Z")
+  AeAf_comparison_plot(mrr, output_dir, "81to101", "return-to-Z", draw_colliders=True)
+  AeAf_comparison_plot(mrr, output_dir, "180to275", r"high-$\sqrt{s*}$")
   
 if __name__ == "__main__":
   main()
