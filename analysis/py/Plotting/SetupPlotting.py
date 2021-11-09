@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Local modules
+import Analysis.CovMatrixCalc as CMC
 import IO.SysHelp as IOSH
 import Plotting.ParSymbolMapping as PPSM
 
@@ -61,6 +62,10 @@ def plot_cor_matrix(cor_matrix, par_names, h_name, output_dir,
                     extensions=["pdf","png"]):
   """ Plot the correlation matrix of a single setup run.
   """
+  # First remove parameters that were not used
+  cor_matrix, par_mask = CMC.clean_cor_mat(cor_matrix)
+  par_names = par_names[par_mask]
+  
   # Create figure for plots and adjust height and width
   n_pars = len(par_names)
   fig, ax = plt.subplots(figsize=np.array([8, 6.5])+0.45 * n_pars)

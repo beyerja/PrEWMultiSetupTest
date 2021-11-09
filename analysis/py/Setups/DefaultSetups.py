@@ -58,5 +58,9 @@ default_WW_setups = [                  # use_TGCs, use_s0, use_A
   IOWWS.WWSetup("WWcTGCs_xs0Free_AFixd", True, True, False),
   IOWWS.WWSetup("WWcTGCs_xs0Fixd_AFree", True, False, True),
   IOWWS.WWSetup("WWcTGCs_xs0Fixd_AFixd", True, False, False),
+  IOWWS.WWSetup("WW_xs0Free_AFree", False, True, True),
+  IOWWS.WWSetup("WW_xs0Free_AFixd", False, True, False),
+  IOWWS.WWSetup("WW_xs0Fixd_AFree", False, False, True),
+  IOWWS.WWSetup("WW_xs0Fixd_AFixd", False, False, False),
   IOWWS.WWSetup() # Dummy for case without WW
 ]

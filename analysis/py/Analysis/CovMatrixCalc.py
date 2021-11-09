@@ -39,3 +39,14 @@ def calc_cor_mat(cov_mat):
   norm += 1.0 * (np.abs(norm) < 1.e-12)
   
   return cov_mat / norm * (np.abs(norm) > 1.e-12)
+  
+def clean_cor_mat(cor_mat):
+  """ Clean the correlation matrix by removing parameters which were fixed in 
+      the fit. Such parameters can be noticed by their zero-value diagonal 
+      elements. (Diagonal values of used parameters are always 1).
+      Returns the cleaned matrix and a mask that shows which parameters were 
+      used.
+  """
+  mask = np.absolute(np.diagonal(cor_mat)) > 0.9
+  cleaned_cor_mat = cor_mat[mask][:,mask]
+  return cleaned_cor_mat, mask
