@@ -58,15 +58,25 @@ def draw_ellipse(ax, rs, Ae_name, Af_name, mass_label, **kwargs):
 
 def draw_FCCee_TeraZ(ax, scale=1.0, **kwargs):
   """ Draw the expected result for the FCCee Tera-Z.
-      Ref: https://indico.desy.de/event/28202/contributions/105242/attachments/67362/83709/Eysermans_EWKPhysics_EPS_26072021.pdf
+  
+      AFB(mumu) ref: https://arxiv.org/pdf/1601.03849.pdf
+      Ae ref:
+        FCC-ee # Z-pole tautau events: 
+          https://link.springer.com/article/10.1140/epjp/s13360-021-01894-y
+        LEP # Z-pol tautau events & Ae precision from tau polarisation:
+          https://arxiv.org/abs/hep-ex/0312023
+      
       Assumes an AFB measurement in the mumu channel of 4 * 10^-6,
       and an independent measurement of Ae from tau polarisation.
       For the Ae uncertainty I take the LEP uncertainty on Ae from tau
       polarisation (~0.005) and devide it by the increased statistics (10^7 more
       Z events at FCC-ee Tera-Z).
   """
-  unc_AFB = 4.e-6
-  unc_Ae = 5.e-3 / np.sqrt(1.e7) # ~ 1.5e-6
+  unc_AFB = 5.e-6
+  
+  N_Ztatau_LEP = 1724e3 / 3
+  N_Ztatau_FCCee = 1.7e11
+  unc_Ae = 5.e-3 / np.sqrt( N_Ztatau_FCCee / N_Ztatau_LEP ) # ~ 9e-6
   
   Ae = truth_vals["return-to-Z"]["Ae"]
   Af = truth_vals["return-to-Z"]["Af"]
@@ -207,13 +217,13 @@ def draw_setups(mrr, ax, Ae_name, Af_name, AFB_name, mass_label, draw_colliders=
   if (mass_label == "return-to-Z") and draw_colliders:
     scale_FCCee = 100.
     arxiv_FCCee = "1601.03849"
-    draw_FCCee_TeraZ(ax, scale=scale_FCCee, label="FCCee (Tera-Z) x{}, $\epsilon_{{\mu}}$ fixed\narXiv:{}".format(int(scale_FCCee),arxiv_FCCee), zorder=3, ls="--", lw=5.0, edgecolor=colors[5], facecolor='none')
+    draw_FCCee_TeraZ(ax, scale=scale_FCCee, label="FCCee (Tera-Z), $\epsilon_{{\mu}}$ fixed\nScaled $\\bf{{x{}}}$\narXiv:{}".format(int(scale_FCCee),arxiv_FCCee), zorder=3, ls="--", lw=5.0, edgecolor=colors[5], facecolor='none')
     scale_ILC = 5.
     arxiv_ILC = "1905.00220"
-    draw_ILC_GigaZ(ax, scale=scale_ILC, label="ILC (Giga-Z) x{}\narXiv:{}".format(int(scale_ILC),arxiv_ILC), zorder=3, ls="--", lw=5.0, edgecolor=colors[6], facecolor='none')
+    draw_ILC_GigaZ(ax, scale=scale_ILC, label="ILC (Giga-Z)\nScaled $\\bf{{x{}}}$\narXiv:{}".format(int(scale_ILC),arxiv_ILC), zorder=3, ls="--", lw=5.0, edgecolor=colors[6], facecolor='none')
   else:
-    ax.plot([],[],color="white",label=" ",zorder=3)
-    ax.plot([],[],color="white",label=" ",zorder=3)
+    ax.plot([],[],color="white",label="\n\n",zorder=3)
+    ax.plot([],[],color="white",label="\n\n",zorder=3)
   
 def draw_true_point(ax, mass_label, **kwargs):
   """ Mark the true Ae-Af point on the plot.
