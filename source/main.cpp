@@ -234,12 +234,13 @@ for (const auto &rps : run_phys_setups) {
     auto mumu_par_pair = rps.mumu_fnc();
     auto pars_mumu_81to101 = mumu_par_pair.first;
     auto pars_mumu_180to275 = mumu_par_pair.second;
+    bool polarised = (rps.mumu_par_name != "mumu_unpol");
     fit_modifier.add(PrEWUtils::SetupHelp::DifermionParamInfo(
-        "2f_mu_81to101_FZ", pars_mumu_81to101));
+        "2f_mu_81to101_FZ", pars_mumu_81to101, polarised));
     fit_modifier.add(PrEWUtils::SetupHelp::DifermionParamInfo(
-        "2f_mu_81to101_BZ", pars_mumu_81to101));
+        "2f_mu_81to101_BZ", pars_mumu_81to101, polarised));
     fit_modifier.add(PrEWUtils::SetupHelp::DifermionParamInfo(
-        "2f_mu_180to275", pars_mumu_180to275));
+        "2f_mu_180to275", pars_mumu_180to275, polarised));
   }
 
   // 7__________________________________________________________________

@@ -159,29 +159,12 @@ inline DifParPair dif_pars_ILCconstr_Ae_Af_ef_fixed_ks() {
   return std::make_pair(mumu_ReturnToZ, mumu_HighQ2);
 }
 
-inline DifParPair dif_pars_AFB_k0_fixed_Ae_Af_dk() {
-  /** Completely removes Af by fixing it to 0.
-      Instead only uses unpolarised quantities AFB by proxy of ef.
-      Ae and dk are fixed as well because there is no direct sensitivity to them
-      in an unpolarised dataset (keeping in mind that it's value does influence
-      the result on AFB and k0, but is fully correlated with the pol's).
-      For truly correct result one needs to use constraints.
-   **/
+inline DifParPair dif_pars_unpol() {
   auto mumu_ReturnToZ = default_ReturnToZ();
-  auto AFB_rrZ =
-      mumu_ReturnToZ.ef_val + 2 * mumu_ReturnToZ.Ae_val * mumu_ReturnToZ.Af_val;
-  mumu_ReturnToZ = mumu_ReturnToZ.ef("AFB_2f_mu_" + ReturnToZ_str, AFB_rrZ)
-                       .fix_Ae()
-                       .fix_Af(0)
-                       .fix_dk();
+  mumu_ReturnToZ.ef_name = "AFB_2f_mu_" + ReturnToZ_str;
 
   auto mumu_HighQ2 = default_HighQ2();
-  auto AFB_hQ2 =
-      mumu_HighQ2.ef_val + 2 * mumu_HighQ2.Ae_val * mumu_HighQ2.Af_val;
-  mumu_HighQ2 = mumu_HighQ2.ef("AFB_2f_mu_" + HighQ2_str, AFB_hQ2)
-                    .fix_Ae()
-                    .fix_Af(0)
-                    .fix_dk();
+  mumu_HighQ2.ef_name = "AFB_2f_mu_" + HighQ2_str;
 
   return std::make_pair(mumu_ReturnToZ, mumu_HighQ2);
 }
@@ -204,8 +187,8 @@ const std::map<std::string, DifParMap> default_dif_pars{
        DifParPairs::dif_pars_ILCconstr_Ae_Af_ef_ks},
       {"mumu_ILCconstr_Ae_Af_ef_fixed_ks",
        DifParPairs::dif_pars_ILCconstr_Ae_Af_ef_fixed_ks},
-      {"mumu_AFB_k0_fixed_Ae_Af_dk",
-       DifParPairs::dif_pars_AFB_k0_fixed_Ae_Af_dk}}}};
+      {"mumu_unpol",
+       DifParPairs::dif_pars_unpol}}}};
 
 // -----------------------------------------------------------------------------
 
