@@ -137,6 +137,12 @@ for (const auto &[run_cat, run_cat_map] : RunInfos::default_run_setups) {
                     if (!(use_WW || use_mumu)) {
                       continue;
                     }
+                    if ( (!use_mumu) && use_WW && (!use_WW_TGCs) && 
+                         fix_WW_xs0 && fix_WW_A && 
+                         (run_name.find("LPfixed") != std::string::npos)) {
+                      // Very specific scenario that has no free parameter
+                      continue;
+                    }
 
                     FullRunPhysSetup new_setup{
                         run_name,    run_fnc,    lumi,          fix_mu_acc,
