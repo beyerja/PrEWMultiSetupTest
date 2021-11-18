@@ -39,7 +39,7 @@ truth_vals = {
 def Af_fromAFB(AFB, Ae, ef):
   """ Calculate Af from AFB for given Ae and epsilon_f.
   """
-  return (AFB - ef) / (2 * Ae)
+  return (8./3. * AFB - ef) / (2 * Ae)
   
 #-------------------------------------------------------------------------------
 
@@ -74,20 +74,21 @@ def draw_FCCee_TeraZ(ax, scale=1.0, **kwargs):
   """
   unc_AFB = 5.e-6
   
-  N_Ztatau_LEP = 1724e3 / 3
-  N_Ztatau_FCCee = 1.7e11
+  N_Ztatau_LEP = 1724e3 / 3 # 1724e3 events on all charged lepton species
+  N_Ztatau_FCCee = 1.7e11 # 1.7e11 tautau events
   unc_Ae = 5.e-3 / np.sqrt( N_Ztatau_FCCee / N_Ztatau_LEP ) # ~ 9e-6
   
   Ae = truth_vals["return-to-Z"]["Ae"]
   Af = truth_vals["return-to-Z"]["Af"]
   ef = truth_vals["return-to-Z"]["ef"]
-  AFB = ef - 2 * Ae * Af
+  AFB = 3./8. * (ef + 2 * Ae * Af)
   
   # Transform the covariance matrix from AFB:Ae to Amu:Ae
   cov_AeAFB = np.array([[unc_Ae**2, 0.],
                         [0.,        unc_AFB**2]])
-  transf_mat = np.array([[1.,         0.],
-                         [-1./(2.*Ae**2) * (AFB - ef), 1./(2.*Ae)]])
+  transf_mat = np.array([
+    [1.,                                            0.         ],
+    [- 8./3. * 1./(2.*Ae**2) * (8./3. * AFB - ef),  1./(2.*Ae) ] ])
   cov_AeAf = np.matmul(np.matmul(transf_mat, cov_AeAFB), transf_mat.T) 
   cov_AeAf_scaled = cov_AeAf * scale**2
   
@@ -162,28 +163,37 @@ def draw_unpol_opt(ax, rs, AFB_name, mass_label, set_axlims=False, **kwargs):
   
   Ae = truth_vals[mass_label]["Ae"]
   Af = truth_vals[mass_label]["Af"]
+  ef = truth_vals[mass_label]["ef"]
   
-  # Simple Gaussian error propagation
-  unc_Ae = unc_AFB / (2 * Af)
-  unc_Af = unc_AFB / (2 * Ae)
+  unc_AFB = rs.unc_vec_avg[i_AFB]
+  val_AFB = rs.par_avg[i_AFB]
+  AFB_low = val_AFB - unc_AFB 
+  AFB_up = val_AFB + unc_AFB 
+
+  Af_low = Af_fromAFB(AFB_low, Ae, ef)
+  Af_up = Af_fromAFB(AFB_up, Ae, ef)
+  
+  unc_Af_low = Af - Af_low
+  unc_Af_up = Af_up - Af
+  yerr = [[unc_Af_low],[unc_Af_up]]
   
   xlims = ax.get_xlim()
   ylims = ax.get_ylim()
   if set_axlims:
+    unc_Ae = 4./3. * unc_AFB / Af
     xlims = [Ae - 1.2 * unc_Ae, Ae + 1.2 * unc_Ae]
-    ylims = [Af - 1.2 * unc_Af, Af + 1.2 * unc_Af]
+    ylims = [Af - 1.2 * unc_Af_low, Af + 1.2 * unc_Af_up]
   
   labels=[None, None]
   if 'label' in kwargs:
     base_label = kwargs['label']
     labels = [
       "{}, {{$A_{{\mu}},\epsilon_{{\mu}}$}} fixed".format(base_label),
-      "{}, {{$A_e,\epsilon_{{\mu}}$}} fixed".format(base_label)
-    ]
-    del kwargs['label']
+      "{}, {{$A_e,\epsilon_{{\mu}}$}} fixed".format(base_label) ]
+  del kwargs['label']
   
   # adjust_ebar(ax.errorbar([Ae],[Af],xerr=unc_Ae,label=labels[0],**kwargs),ls='dotted')
-  adjust_ebar(ax.errorbar([Ae],[Af],yerr=unc_Af,label=labels[1],**kwargs),ls=':')
+  adjust_ebar(ax.errorbar([Ae],[Af],yerr=yerr,label=labels[1],**kwargs),ls=':')
   
   ax.set_xlim(xlims)
   ax.set_ylim(ylims)
@@ -196,8 +206,8 @@ def draw_setups(mrr, ax, Ae_name, Af_name, AFB_name, mass_label, draw_colliders=
   rs_2polExt = mrr.get(2000, "2polExt_LPcnstr", "MuAccFree", "mumu_free").result_summary()
   rs_2pol = mrr.get(2000, "2pol_LPcnstr", "MuAccFree", "mumu_free").result_summary()
   rs_1pol = mrr.get(2000, "1pol_LPcnstr", "MuAccFree", "mumu_free").result_summary()
-  rs_0pol_2 = mrr.get(2000, "0pol_LPcnstr", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_dk").result_summary()
-  rs_0pol_10 = mrr.get(10000, "0pol_LPcnstr", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_dk").result_summary()
+  rs_0pol_2 = mrr.get(2000, "0pol_LPcnstr", "MuAccFree", "mumu_unpol").result_summary()
+  rs_0pol_10 = mrr.get(10000, "0pol_LPcnstr", "MuAccFree", "mumu_unpol").result_summary()
 
   # Get the colors of the color cycle (to get manual control over them)
   colors =  plt.rcParams['axes.prop_cycle'].by_key()['color']
@@ -215,7 +225,7 @@ def draw_setups(mrr, ax, Ae_name, Af_name, AFB_name, mass_label, draw_colliders=
   draw_unpol_range(ax, rs_0pol_10, AFB_name, mass_label, lw=5.0, color=colors[4], label="(0,0), 10ab$^{-1}$, $\epsilon_{\mu}$ fixed", zorder=1)
   
   if (mass_label == "return-to-Z") and draw_colliders:
-    scale_FCCee = 100.
+    scale_FCCee = 50.
     arxiv_FCCee = "1601.03849"
     draw_FCCee_TeraZ(ax, scale=scale_FCCee, label="FCCee (Tera-Z), $\epsilon_{{\mu}}$ fixed\nScaled $\\bf{{x{}}}$\narXiv:{}".format(int(scale_FCCee),arxiv_FCCee), zorder=3, ls="--", lw=5.0, edgecolor=colors[5], facecolor='none')
     scale_ILC = 5.
@@ -312,7 +322,7 @@ def main():
     IODPS.DifParamSetup("mumu_free",                  "free", "free", "free", "free", "free", "free")
   ]
   unpol_difparam_setups = [
-    IODPS.DifParamSetup("mumu_AFB_k0_fixed_Ae_Af_dk", "free", "fixed", "fixed", "free->AFB", "free->k0", "fixed")
+    IODPS.DifParamSetup("mumu_unpol", "free", "fixed", "fixed", "free->AFB", "free->k0", "fixed")
   ]
   
   mrr = IOMRR.MultiResultReader(fit_output_base, pol_lumi_setups, 

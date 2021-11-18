@@ -69,30 +69,30 @@ def draw_setups(mrr, ax, x, y_fcts):
   ax.plot(_x+marker_shifts[5], y, mec="black", ls="", marker="^", ms=ms, color=color, zorder=3)      
 
   _x = x+x_shifts[3]
-  y = y_fcts[3](mrr.get(2000, "0pol_LPcnstr", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_dk").result_summary())
-  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(0\%,0\%)$, $2$ab$^{-1}$")
+  y = y_fcts[3](mrr.get(2000, "0pol_LPcnstr", "MuAccFree", "mumu_unpol").result_summary())
+  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(0,0)$, $2$ab$^{-1}$")
   color = bar.patches[0].get_facecolor()
-  y = y_fcts[3](mrr.get(2000, "0pol_Lfixed_P0constr", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_dk").result_summary())
+  y = y_fcts[3](mrr.get(2000, "0pol_Lfixed_P0constr", "MuAccFree", "mumu_unpol").result_summary())
   ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="o", ms=ms, color=color, zorder=3) 
-  y = y_fcts[3](mrr.get(2000, "0pol_LPcnstr", "MuAccFixd", "mumu_AFB_k0_fixed_Ae_Af_dk").result_summary())
-  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3)      
-  y = y_fcts[3](mrr.get(2000, "0pol_Lconstr_P0fixed", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_dk").result_summary())
-  ax.plot(_x+marker_shifts[4], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3) 
   y = y_fcts[3](mrr.get(2000, "0pol_Lconstr_P0fixed", "MuAccFixd", "mumu_AFB_k0_fixed_Ae_Af_dk").result_summary())
   ax.plot(_x+marker_shifts[5], y, mec="black", ls="", marker="^", ms=ms, color=color, zorder=3) 
+  y = y_fcts[3](mrr.get(2000, "0pol_Lconstr_P0fixed", "MuAccFree", "mumu_unpol").result_summary())
+  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3) 
+  y = y_fcts[3](mrr.get(2000, "0pol_LPcnstr", "MuAccFixd", "mumu_unpol").result_summary())
+  ax.plot(_x+marker_shifts[4], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3)      
 
   _x = x+x_shifts[4]
-  y = y_fcts[4](mrr.get(10000, "0pol_LPcnstr", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_dk").result_summary())
-  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(0\%,0\%)$, $10$ab$^{-1}$")
+  y = y_fcts[4](mrr.get(10000, "0pol_LPcnstr", "MuAccFree", "mumu_unpol").result_summary())
+  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(0,0)$, $10$ab$^{-1}$")
   color = bar.patches[0].get_facecolor()
-  y = y_fcts[4](mrr.get(10000, "0pol_Lfixed_P0constr", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_dk").result_summary())
+  y = y_fcts[4](mrr.get(10000, "0pol_Lfixed_P0constr", "MuAccFree", "mumu_unpol").result_summary())
   ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="o", ms=ms, color=color, zorder=3) 
-  y = y_fcts[4](mrr.get(10000, "0pol_LPcnstr", "MuAccFixd", "mumu_AFB_k0_fixed_Ae_Af_dk").result_summary())
-  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3)      
-  y = y_fcts[4](mrr.get(10000, "0pol_Lconstr_P0fixed", "MuAccFree", "mumu_AFB_k0_fixed_Ae_Af_dk").result_summary())
-  ax.plot(_x+marker_shifts[4], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3) 
   y = y_fcts[4](mrr.get(10000, "0pol_Lconstr_P0fixed", "MuAccFixd", "mumu_AFB_k0_fixed_Ae_Af_dk").result_summary())
   ax.plot(_x+marker_shifts[5], y, mec="black", ls="", marker="^", ms=ms, color=color, zorder=3) 
+  y = y_fcts[4](mrr.get(10000, "0pol_Lconstr_P0fixed", "MuAccFree", "mumu_unpol").result_summary())
+  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3) 
+  y = y_fcts[4](mrr.get(10000, "0pol_LPcnstr", "MuAccFixd", "mumu_unpol").result_summary())
+  ax.plot(_x+marker_shifts[4], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3)      
 
 def markers_to_legend_handles(ax):
   """ Add extra entries to legend that describe the markers for different tested 
@@ -250,7 +250,7 @@ def main():
     IODPS.DifParamSetup("mumu_free",                  "free", "free", "free", "free", "free", "free")
   ]
   unpol_difparam_setups = [
-    IODPS.DifParamSetup("mumu_AFB_k0_fixed_Ae_Af_dk", "free", "fixed", "fixed", "free->AFB", "free->k0", "fixed")
+    IODPS.DifParamSetup("mumu_unpol", "free", "fixed", "fixed", "free->AFB", "free->k0", "fixed")
   ]
   
   mrr = IOMRR.MultiResultReader(fit_output_base, pol_lumi_setups, 

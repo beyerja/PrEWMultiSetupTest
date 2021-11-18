@@ -49,7 +49,7 @@ default_pol_difparam_setups = [                         # s0, Ae, Af, ef, k0, dk
 default_unpol_difparam_setups = [
   IODPS.DifParamSetup("mumu_ILCconstr_Ae_Af_ef_ks",       "free", "constrained", "constrained", "constrained", "constrained", "constrained", constr_type="ILC"),
   IODPS.DifParamSetup("mumu_ILCconstr_Ae_Af_ef_fixed_ks", "free", "constrained", "constrained", "constrained", "fixed", "fixed", constr_type="ILC"),
-  IODPS.DifParamSetup("mumu_AFB_k0_fixed_Ae_Af_dk",       "free", "fixed", "fixed", "free->AFB", "free->k0", "fixed"),
+  IODPS.DifParamSetup("mumu_unpol",       "free", "fixed", "fixed", "free->AFB", "free->k0", "fixed"),
   IODPS.DifParamSetup() # Dummy for case without mumu
 ]
 
