@@ -20,122 +20,68 @@ import Setups.WWSetup as IOWWS
 
 #-------------------------------------------------------------------------------
 
-def adjust_ebar(ebar, ls):
-  """ Adjust the given errorbar.
-  """
-  ebar[-1][0].set_linestyle(ls)
-  return ebar
-
 def draw_setups(mrr, ax, x, y_fcts):
   """ This part should be common for all physics and nuisance histograms:
       The drawing of the different setups
   """
   x_shifts, bar_width = np.linspace(-0.27,0.27,5,endpoint=True,retstep=True)
-  marker_shifts = np.linspace(-bar_width/2,bar_width/2,6,endpoint=True)
-  ebar_shifts = np.linspace(-bar_width/2,bar_width/2,5,endpoint=True)
+  marker_shifts = np.linspace(-bar_width/2,bar_width/2,5,endpoint=True)
   ms = 8 # marker size
   
-  # Errorbar's need some additional prep to look nice
-  eps = 5
-  zeros = np.zeros_like(x)
-  eps_zeros = zeros - eps
-  ebar_prep = lambda y: np.array([zeros, np.where(y >= 0, y+eps, 0)])
-  ebar_width = 3
-  
   _x = x+x_shifts[0]
-  y = y_fcts[0](mrr.get(2000, "2polExt_LPcnstr", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
-  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(80\%,30\%)^{\mathrm{w/\ }P_{e^{\pm}}^{0}}$, $2$ab$^{-1}$")
+  y = y_fcts[0](mrr.get(2000, "2polExt_LPcnstr", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Free_AFixd").result_summary())
+  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(80/0,30/0)$, $2$ab$^{-1}$")
   color = bar.patches[0].get_facecolor()
-  y = y_fcts[0](mrr.get(2000, "2polExt_Lfixed_Pconstr", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
+  y = y_fcts[0](mrr.get(2000, "2polExt_Lfixed_Pconstr", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Free_AFixd").result_summary())
   ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="o", ms=ms, color=color, zorder=3)      
-  y = y_fcts[0](mrr.get(2000, "2polExt_LPcnstr", "MuAccFixd", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
-  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3)      
-  y = y_fcts[0](mrr.get(2000, "2polExt_Lconstr_Pfixed", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
-  ax.plot(_x+marker_shifts[3], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3)      
-  y = y_fcts[0](mrr.get(2000, "2polExt_Lconstr_Pfixed", "MuAccFixd", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
-  ax.plot(_x+marker_shifts[4], y, mec="black", ls="", marker="^", ms=ms, color=color, zorder=3)      
-  y = ebar_prep(y_fcts[0](mrr.get(2000, "2polExt_LPcnstr", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Free_AFixd").result_summary()))
-  adjust_ebar(ax.errorbar(_x+ebar_shifts[1], eps_zeros, yerr=y, color=color, capsize=ebar_width, capthick=ebar_width, elinewidth=ebar_width), ls="--")
-  y = ebar_prep(y_fcts[0](mrr.get(2000, "2polExt_LPcnstr", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Fixd_AFree").result_summary()))
-  adjust_ebar(ax.errorbar(_x+ebar_shifts[2], eps_zeros, yerr=y, color=color, capsize=ebar_width, capthick=ebar_width, elinewidth=ebar_width), ls=":")
-  y = ebar_prep(y_fcts[0](mrr.get(2000, "2polExt_LPcnstr", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Free_AFree").result_summary()))
-  adjust_ebar(ax.errorbar(_x+ebar_shifts[3], eps_zeros, yerr=y, color=color, capsize=ebar_width, capthick=ebar_width, elinewidth=ebar_width), ls="-.")
+  y = y_fcts[0](mrr.get(2000, "2polExt_Lconstr_Pfixed", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Free_AFixd").result_summary())
+  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3)      
+  y = y_fcts[0](mrr.get(2000, "2polExt_LPcnstr", "MuAccFixd", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Free_AFixd").result_summary())
+  ax.plot(_x+marker_shifts[3], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3)      
   
   _x = x+x_shifts[1]
-  y = y_fcts[1](mrr.get(2000, "2pol_LPcnstr", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
-  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(80\%,30\%)$, $2$ab$^{-1}$")
+  y = y_fcts[1](mrr.get(2000, "2pol_LPcnstr", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Free_AFixd").result_summary())
+  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(80,30)$, $2$ab$^{-1}$")
   color = bar.patches[0].get_facecolor()
-  y = y_fcts[1](mrr.get(2000, "2pol_Lfixed_Pconstr", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
+  y = y_fcts[1](mrr.get(2000, "2pol_Lfixed_Pconstr", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Free_AFixd").result_summary())
   ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="o", ms=ms, color=color, zorder=3)      
-  y = y_fcts[1](mrr.get(2000, "2pol_LPcnstr", "MuAccFixd", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
-  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3)      
-  y = y_fcts[1](mrr.get(2000, "2pol_Lconstr_Pfixed", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
-  ax.plot(_x+marker_shifts[3], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3)      
-  y = y_fcts[1](mrr.get(2000, "2pol_Lconstr_Pfixed", "MuAccFixd", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
-  ax.plot(_x+marker_shifts[4], y, mec="black", ls="", marker="^", ms=ms, color=color, zorder=3)
-  y = ebar_prep(y_fcts[1](mrr.get(2000, "2pol_LPcnstr", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Free_AFixd").result_summary()))
-  adjust_ebar(ax.errorbar(_x+ebar_shifts[1], eps_zeros, yerr=y, color=color, capsize=ebar_width, capthick=ebar_width, elinewidth=ebar_width), ls="--")
-  y = ebar_prep(y_fcts[1](mrr.get(2000, "2pol_LPcnstr", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Fixd_AFree").result_summary()))
-  adjust_ebar(ax.errorbar(_x+ebar_shifts[2], eps_zeros, yerr=y, color=color, capsize=ebar_width, capthick=ebar_width, elinewidth=ebar_width), ls=":")
-  y = ebar_prep(y_fcts[1](mrr.get(2000, "2pol_LPcnstr", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Free_AFree").result_summary()))
-  adjust_ebar(ax.errorbar(_x+ebar_shifts[3], eps_zeros, yerr=y, color=color, capsize=ebar_width, capthick=ebar_width, elinewidth=ebar_width), ls="-.")
+  y = y_fcts[1](mrr.get(2000, "2pol_Lconstr_Pfixed", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Free_AFixd").result_summary())
+  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3)      
+  y = y_fcts[1](mrr.get(2000, "2pol_LPcnstr", "MuAccFixd", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Free_AFixd").result_summary())
+  ax.plot(_x+marker_shifts[3], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3)      
 
   _x = x+x_shifts[2]
-  y = y_fcts[2](mrr.get(2000, "1pol_LPcnstr", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
-  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(80\%,0\%)$, $2$ab$^{-1}$")
+  y = y_fcts[2](mrr.get(2000, "1pol_LPcnstr", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Free_AFixd").result_summary())
+  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(80,0)$, $2$ab$^{-1}$")
   color = bar.patches[0].get_facecolor()
-  y = y_fcts[2](mrr.get(2000, "1pol_Lfixed_Pconstr", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
+  y = y_fcts[2](mrr.get(2000, "1pol_Lfixed_Pconstr", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Free_AFixd").result_summary())
   ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="o", ms=ms, color=color, zorder=3)      
-  y = y_fcts[2](mrr.get(2000, "1pol_LPcnstr", "MuAccFixd", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
-  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3)      
-  y = y_fcts[2](mrr.get(2000, "1pol_Lconstr_Pfixed", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
-  ax.plot(_x+marker_shifts[3], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3)      
-  y = y_fcts[2](mrr.get(2000, "1pol_Lconstr_Pfixed", "MuAccFixd", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
-  ax.plot(_x+marker_shifts[4], y, mec="black", ls="", marker="^", ms=ms, color=color, zorder=3) 
-  y = ebar_prep(y_fcts[2](mrr.get(2000, "1pol_LPcnstr", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Free_AFixd").result_summary()))
-  adjust_ebar(ax.errorbar(_x+ebar_shifts[1], eps_zeros, yerr=y, color=color, capsize=ebar_width, capthick=ebar_width, elinewidth=ebar_width), ls="--")
-  y = ebar_prep(y_fcts[2](mrr.get(2000, "1pol_LPcnstr", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Fixd_AFree").result_summary()))
-  adjust_ebar(ax.errorbar(_x+ebar_shifts[2], eps_zeros, yerr=y, color=color, capsize=ebar_width, capthick=ebar_width, elinewidth=ebar_width), ls=":")
-  y = ebar_prep(y_fcts[2](mrr.get(2000, "1pol_LPcnstr", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Free_AFree").result_summary()))
-  adjust_ebar(ax.errorbar(_x+ebar_shifts[3], eps_zeros, yerr=y, color=color, capsize=ebar_width, capthick=ebar_width, elinewidth=ebar_width), ls="-.")     
+  y = y_fcts[2](mrr.get(2000, "1pol_Lconstr_Pfixed", "MuAccFree", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Free_AFixd").result_summary())
+  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3)      
+  y = y_fcts[2](mrr.get(2000, "1pol_LPcnstr", "MuAccFixd", difparam_name="mumu_free", WW_name="WWcTGCs_xs0Free_AFixd").result_summary())
+  ax.plot(_x+marker_shifts[3], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3)      
 
   _x = x+x_shifts[3]
-  y = y_fcts[3](mrr.get(2000, "0pol_LPcnstr", "MuAccFree", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
-  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(0\%,0\%)$, $2$ab$^{-1}$")
+  y = y_fcts[3](mrr.get(2000, "0pol_LPcnstr", "MuAccFree", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Free_AFixd").result_summary())
+  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(0,0)$, $2$ab$^{-1}$")
   color = bar.patches[0].get_facecolor()
-  y = y_fcts[3](mrr.get(2000, "0pol_Lfixed_P0constr", "MuAccFree", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
+  y = y_fcts[3](mrr.get(2000, "0pol_Lfixed_P0constr", "MuAccFree", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Free_AFixd").result_summary())
   ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="o", ms=ms, color=color, zorder=3) 
-  y = y_fcts[3](mrr.get(2000, "0pol_LPcnstr", "MuAccFixd", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
-  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3)      
-  y = y_fcts[3](mrr.get(2000, "0pol_Lconstr_P0fixed", "MuAccFree", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
-  ax.plot(_x+marker_shifts[3], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3) 
-  y = y_fcts[3](mrr.get(2000, "0pol_Lconstr_P0fixed", "MuAccFixd", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
-  ax.plot(_x+marker_shifts[4], y, mec="black", ls="", marker="^", ms=ms, color=color, zorder=3) 
-  y = ebar_prep(y_fcts[3](mrr.get(2000, "0pol_LPcnstr", "MuAccFree", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Free_AFixd").result_summary()))
-  adjust_ebar(ax.errorbar(_x+ebar_shifts[1], eps_zeros, yerr=y, color=color, capsize=ebar_width, capthick=ebar_width, elinewidth=ebar_width), ls="--")
-  y = ebar_prep(y_fcts[3](mrr.get(2000, "0pol_LPcnstr", "MuAccFree", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Fixd_AFree").result_summary()))
-  adjust_ebar(ax.errorbar(_x+ebar_shifts[2], eps_zeros, yerr=y, color=color, capsize=ebar_width, capthick=ebar_width, elinewidth=ebar_width), ls=":")
-  y = ebar_prep(y_fcts[3](mrr.get(2000, "0pol_LPcnstr", "MuAccFree", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Free_AFree").result_summary()))
-  adjust_ebar(ax.errorbar(_x+ebar_shifts[3], eps_zeros, yerr=y, color=color, capsize=ebar_width, capthick=ebar_width, elinewidth=ebar_width), ls="-.")
+  y = y_fcts[3](mrr.get(2000, "0pol_Lconstr_P0fixed", "MuAccFree", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Free_AFixd").result_summary())
+  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3) 
+  y = y_fcts[3](mrr.get(2000, "0pol_LPcnstr", "MuAccFixd", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Free_AFixd").result_summary())
+  ax.plot(_x+marker_shifts[3], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3)      
 
   _x = x+x_shifts[4]
-  y = y_fcts[4](mrr.get(10000, "0pol_LPcnstr", "MuAccFree", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
-  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(0\%,0\%)$, $10$ab$^{-1}$")
+  y = y_fcts[4](mrr.get(10000, "0pol_LPcnstr", "MuAccFree", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Free_AFixd").result_summary())
+  bar = ax.bar(_x, y, width=bar_width, align='center', zorder=2, label=r"$(0,0)$, $10$ab$^{-1}$")
   color = bar.patches[0].get_facecolor()
-  y = y_fcts[4](mrr.get(10000, "0pol_Lfixed_P0constr", "MuAccFree", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
+  y = y_fcts[4](mrr.get(10000, "0pol_Lfixed_P0constr", "MuAccFree", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Free_AFixd").result_summary())
   ax.plot(_x+marker_shifts[1], y, mec="black", ls="", marker="o", ms=ms, color=color, zorder=3) 
-  y = y_fcts[4](mrr.get(10000, "0pol_LPcnstr", "MuAccFixd", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
-  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3)      
-  y = y_fcts[4](mrr.get(10000, "0pol_Lconstr_P0fixed", "MuAccFree", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
-  ax.plot(_x+marker_shifts[3], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3) 
-  y = y_fcts[4](mrr.get(10000, "0pol_Lconstr_P0fixed", "MuAccFixd", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Fixd_AFixd").result_summary())
-  ax.plot(_x+marker_shifts[4], y, mec="black", ls="", marker="^", ms=ms, color=color, zorder=3) 
-  y = ebar_prep(y_fcts[4](mrr.get(10000, "0pol_LPcnstr", "MuAccFree", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Free_AFixd").result_summary()))
-  adjust_ebar(ax.errorbar(_x+ebar_shifts[1], eps_zeros, yerr=y, color=color, capsize=ebar_width, capthick=ebar_width, elinewidth=ebar_width), ls="--")
-  y = ebar_prep(y_fcts[4](mrr.get(10000, "0pol_LPcnstr", "MuAccFree", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Fixd_AFree").result_summary()))
-  adjust_ebar(ax.errorbar(_x+ebar_shifts[2], eps_zeros, yerr=y, color=color, capsize=ebar_width, capthick=ebar_width, elinewidth=ebar_width), ls=":")
-  y = ebar_prep(y_fcts[4](mrr.get(10000, "0pol_LPcnstr", "MuAccFree", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Free_AFree").result_summary()))
-  adjust_ebar(ax.errorbar(_x+ebar_shifts[3], eps_zeros, yerr=y, color=color, capsize=ebar_width, capthick=ebar_width, elinewidth=ebar_width), ls="-.")
+  y = y_fcts[4](mrr.get(10000, "0pol_Lconstr_P0fixed", "MuAccFree", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Free_AFixd").result_summary())
+  ax.plot(_x+marker_shifts[2], y, mec="black", ls="", marker="X", ms=ms, color=color, zorder=3) 
+  y = y_fcts[4](mrr.get(10000, "0pol_LPcnstr", "MuAccFixd", difparam_name="mumu_unpol", WW_name="WWcTGCs_xs0Free_AFixd").result_summary())
+  ax.plot(_x+marker_shifts[3], y, mec="black", ls="", marker="*", ms=ms, color=color, zorder=3)      
 
 def markers_to_legend_handles(ax):
   """ Add extra entries to legend that describe the markers for different tested 
@@ -144,23 +90,11 @@ def markers_to_legend_handles(ax):
   handles, labels = ax.get_legend_handles_labels()
   
   dot_dummy = plt.scatter([], [], color='None', ec='black', marker='o', linestyle='None', s=120, label=r'$L$ fixed')
-  star_dummy = plt.scatter([], [], color='None', ec='black', marker='*', linestyle='None', s=120, label=r'$\mu$ acc. fixed')
-  box_dummy = plt.scatter([], [], color='None', ec='black', marker='D', linestyle='None', s=120, label=r'only $P_{0}$ fixed')
   cross_dummy = plt.scatter([], [], color='None', ec='black', marker='X', linestyle='None', s=120, label=r'all $P$ fixed')
-  triangle_dummy = plt.scatter([], [], color='None', ec='black', marker='^', linestyle='None', s=120, label=r'$P$ & $\mu$ acc. fixed')
+  star_dummy = plt.scatter([], [], color='None', ec='black', marker='*', linestyle='None', s=120, label=r'$\mu$ acc. fixed')
   handles.append(dot_dummy) 
   handles.append(cross_dummy) 
-  handles.append(box_dummy) 
   handles.append(star_dummy) 
-  handles.append(triangle_dummy) 
-  
-  ebar_width = 3
-  ebar_l_dummy = ax.plot([], [], color='black', lw=ebar_width, ls="--", label="$\sigma_0$ free")
-  ebar_d_dummy = ax.plot([], [], color='black', lw=ebar_width, ls=":", label="$A_{LR}$ free")
-  ebar_m_dummy = ax.plot([], [], color='black', lw=ebar_width, ls="-.", label="$\sigma_0$ & $A_{LR}$ free")
-  handles.append(ebar_l_dummy[0]) 
-  handles.append(ebar_d_dummy[0]) 
-  handles.append(ebar_m_dummy[0]) 
   return handles
 
 #-------------------------------------------------------------------------------
@@ -171,7 +105,7 @@ def make_fit_function(x_par_names, par_norm):
 #-------------------------------------------------------------------------------
 
 def difermion_par_plot(mrr, output_dir, mass_range, label, scale):
-  fig = plt.figure(figsize=(15,9), tight_layout=True)
+  fig = plt.figure(figsize=(15,7), tight_layout=True)
   
   x = np.arange(7)+0.5
   x_ticks = [ "$\sigma_0/\sigma_0^{SM}$", "$A_e$", "$A_{\mu}$", "$\epsilon_{\mu}$", "$A_{FB,0}^{\mu}$", "$k_0$", "$\Delta k$" ]
@@ -195,7 +129,7 @@ def difermion_par_plot(mrr, output_dir, mass_range, label, scale):
   # Add markers for the tested scenarios to legend
   handles = markers_to_legend_handles(ax)
   
-  legend = plt.legend(handles=handles, title="$(P_{e^{-}},P_{e^{+}})$, $L$", ncol=4, fontsize=17, bbox_to_anchor=(-0.1, 1.05), loc='lower left')
+  legend = plt.legend(handles=handles, title="$(P_{e^{-}}[\%],P_{e^{+}}[\%])$, $L$", ncol=4, fontsize=17, loc='upper right')
 
   ax.set_xticks(x + 0.5, minor=True)
   ax.grid(True,which="minor",axis="x",ls='--')
@@ -207,18 +141,17 @@ def difermion_par_plot(mrr, output_dir, mass_range, label, scale):
   plt.close(fig)
 
 def TGC_par_plot(mrr, output_dir, scale):
-  fig = plt.figure(figsize=(10,9), tight_layout=True)
+  fig = plt.figure(figsize=(10,7), tight_layout=True)
   
   x = np.arange(3)+0.5
   x_ticks = [ "$g_{1}^{Z}$", "$\kappa_{\gamma}$", "$\lambda_{\gamma}$" ]
   plt.xticks(x, x_ticks, size='large')
   
-  # plt.xlabel('$e^+e^- \\rightarrow WW \\rightarrow q\\bar{q}\\mu\\nu$', size='large')
   plt.xlabel('Triple Gauge Couplings', size='large')
   plt.ylabel('Uncertainty [{:.0E}]'.format(Decimal(scale)), size='large')
   ax = plt.gca()
   ax.set_xlim(0,x[-1])
-  ax.set_ylim(0,35)
+  ax.set_ylim(0,25)
 
   par_names = np.array([ 
     "Delta-g1Z", "Delta-kappa_gamma", "Delta-lambda_gamma" ])
@@ -230,7 +163,7 @@ def TGC_par_plot(mrr, output_dir, scale):
   # Add markers for the tested scenarios to legend
   handles = markers_to_legend_handles(ax)
   
-  legend = plt.legend(handles=handles, title="$(P_{e^{-}},P_{e^{+}})$, $L$", ncol=2, fontsize=17)#, bbox_to_anchor=(-0.1, 1.05))#, loc='lower left')
+  legend = plt.legend(handles=handles, title="$(P_{e^{-}}[\%],P_{e^{+}}[\%])$, $L$", ncol=2, fontsize=17, loc="upper left")
 
   ax.set_xticks(x + 0.5, minor=True)
   ax.grid(True,which="minor",axis="x",ls='--')
@@ -242,7 +175,7 @@ def TGC_par_plot(mrr, output_dir, scale):
   plt.close(fig)
 
 def WW_par_plot(mrr, output_dir, scale):
-  fig = plt.figure(figsize=(12,9), tight_layout=True)
+  fig = plt.figure(figsize=(12,7), tight_layout=True)
   
   x = np.arange(4)+0.5
   x_ticks = [ "$\sigma_0/\sigma_0^{SM}(W^{-})$", "$\sigma_0/\sigma_0^{SM}(W^{+})$", "$A_{LR} (W^{-})$", "$A_{LR} (W^{+})$" ]
@@ -264,7 +197,7 @@ def WW_par_plot(mrr, output_dir, scale):
   # Add markers for the tested scenarios to legend
   handles = markers_to_legend_handles(ax)
   
-  legend = plt.legend(handles=handles, title="$(P_{e^{-}},P_{e^{+}})$, $L$", ncol=2, fontsize=17)#, bbox_to_anchor=(-0.1, 1.05))#, loc='lower left')
+  legend = plt.legend(handles=handles, title="$(P_{e^{-}}[\%],P_{e^{+}}[\%])$, $L$", ncol=1, fontsize=17)
 
   ax.set_xticks(x + 0.5, minor=True)
   ax.grid(True,which="minor",axis="x",ls='--')
@@ -276,7 +209,7 @@ def WW_par_plot(mrr, output_dir, scale):
   plt.close(fig)
 
 def nuisance_par_plot(mrr, output_dir, scale):
-  fig = plt.figure(figsize=(25,9), tight_layout=True)
+  fig = plt.figure(figsize=(25,7), tight_layout=True)
   
   x = np.arange(9)+0.5
   x_ticks = [ r"$L$", r"$P_{e^-}^{-}$", r"$P_{e^-}^{+}$", r"(*)$P_{e^-}^{0}$", 
@@ -316,7 +249,7 @@ def nuisance_par_plot(mrr, output_dir, scale):
   constr_marker_dummy = plt.scatter([], [], color="gold", ec="black", marker='v', linestyle='-', s=120, label=r'Constraints')
   handles.append(constr_marker_dummy) 
   
-  legend = plt.legend(handles=handles, title="$(P_{e^{-}},P_{e^{+}})$, $L$", ncol=6, fontsize=17, bbox_to_anchor=(-0.02, 1.05), loc='lower left')
+  legend = plt.legend(handles=handles, title="$(P_{e^{-}}[\%],P_{e^{+}}[\%])$, $L$", ncol=6, fontsize=17, loc='upper center')
   
   ax.set_xticks(x + 0.5, minor=True)
   ax.grid(True,which="minor",axis="x",ls='--')
@@ -351,7 +284,6 @@ def main():
     IORS.RunSetup("2pol_Lfixed_Pconstr"),
     IORS.RunSetup("1pol_LPcnstr"),
     IORS.RunSetup("1pol_Lconstr_Pfixed"),
-    IORS.RunSetup("1pol_LPcnstr_P0fixed"),
     IORS.RunSetup("1pol_Lfixed_Pconstr")
   ]
   unpol_lumi_setups = [ 2000, 10000 ]
@@ -371,10 +303,7 @@ def main():
     IODPS.DifParamSetup("mumu_unpol", "free", "fixed", "fixed", "free->AFB", "free->k0", "fixed")
   ]
   WW_setups = [
-    IOWWS.WWSetup("WWcTGCs_xs0Free_AFree"),
-    IOWWS.WWSetup("WWcTGCs_xs0Free_AFixd"),
-    IOWWS.WWSetup("WWcTGCs_xs0Fixd_AFree"),
-    IOWWS.WWSetup("WWcTGCs_xs0Fixd_AFixd")
+    IOWWS.WWSetup("WWcTGCs_xs0Free_AFixd")
   ]
     
   mrr = IOMRR.MultiResultReader(fit_output_base, pol_lumi_setups, 
