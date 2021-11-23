@@ -188,8 +188,8 @@ def draw_unpol_opt(ax, rs, AFB_name, mass_label, set_axlims=False, **kwargs):
   if 'label' in kwargs:
     base_label = kwargs['label']
     labels = [
-      "{}, {{$A_{{\mu}},\epsilon_{{\mu}}$}} fixed".format(base_label),
-      "{}, {{$A_e,\epsilon_{{\mu}}$}} fixed".format(base_label) ]
+      "{}, {{$A_{{\mu}},\epsilon_{{\mu}}$, $P$}} fixed".format(base_label),
+      "{}, {{$A_e,\epsilon_{{\mu}}$, $P$}} fixed".format(base_label) ]
   del kwargs['label']
   
   # adjust_ebar(ax.errorbar([Ae],[Af],xerr=unc_Ae,label=labels[0],**kwargs),ls='dotted')
@@ -221,8 +221,8 @@ def draw_setups(mrr, ax, Ae_name, Af_name, AFB_name, mass_label, draw_colliders=
   draw_unpol_opt(ax, rs_0pol_2, AFB_name, mass_label, color=colors[3], lw=5, capsize=15, capthick=5, alpha=0.9, label="(0,0), 2ab$^{-1}$", ls='none', set_axlims=True)
   draw_unpol_opt(ax, rs_0pol_10, AFB_name, mass_label, color=colors[4], lw=5, capsize=15, capthick=5, alpha=0.9, label="(0,0), 10ab$^{-1}$", ls='none')
   
-  draw_unpol_range(ax, rs_0pol_2, AFB_name, mass_label, lw=5.0, color=colors[3], label="(0,0), 2ab$^{-1}$, $\epsilon_{\mu}$ fixed", zorder=1)
-  draw_unpol_range(ax, rs_0pol_10, AFB_name, mass_label, lw=5.0, color=colors[4], label="(0,0), 10ab$^{-1}$, $\epsilon_{\mu}$ fixed", zorder=1)
+  draw_unpol_range(ax, rs_0pol_2, AFB_name, mass_label, lw=5.0, color=colors[3], label="(0,0), 2ab$^{-1}$, {$\epsilon_{\mu}$, $P$} fixed", zorder=1)
+  draw_unpol_range(ax, rs_0pol_10, AFB_name, mass_label, lw=5.0, color=colors[4], label="(0,0), 10ab$^{-1}$, {$\epsilon_{\mu}$, $P$} fixed", zorder=1)
   
   if (mass_label == "return-to-Z") and draw_colliders:
     scale_FCCee = 50.
@@ -292,7 +292,7 @@ def AeAf_comparison_plot(mrr, output_dir, mass_range, label, draw_colliders=Fals
     format_dir = "{}/{}".format(output_dir,out_format)
     IOSH.create_dir(format_dir)
     collider_str = "_wColliders" if draw_colliders else ""
-    fig.savefig("{}/2f_pars_{}{}.{}".format(format_dir,mass_range,collider_str,out_format), transparent=True)
+    fig.savefig("{}/2f_pars_{}{}.{}".format(format_dir,mass_range,collider_str,out_format), transparent=True, bbox_extra_artists=[legend], bbox_inches='tight')
   plt.close(fig)
 
 #-------------------------------------------------------------------------------
