@@ -87,8 +87,8 @@ def draw_FCCee_TeraZ(ax, scale=1.0, **kwargs):
   cov_AeAFB = np.array([[unc_Ae**2, 0.],
                         [0.,        unc_AFB**2]])
   transf_mat = np.array([
-    [1.,                                            0.         ],
-    [- 8./3. * 1./(2.*Ae**2) * (8./3. * AFB - ef),  1./(2.*Ae) ] ])
+    [1.,                                            0.               ],
+    [- 1./(2.*Ae**2) * (8./3. * AFB - ef),          8/3 * 1./(2.*Ae) ] ])
   cov_AeAf = np.matmul(np.matmul(transf_mat, cov_AeAFB), transf_mat.T) 
   cov_AeAf_scaled = cov_AeAf * scale**2
   
