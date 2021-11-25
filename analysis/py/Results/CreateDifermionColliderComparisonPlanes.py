@@ -99,12 +99,12 @@ def draw_FCCee_TeraZ(ax, scale=1.0, **kwargs):
 
 def draw_ILC_GigaZ(ax, scale=1.0, **kwargs):
   """ Draw the expected result for the ILC Giga-Z.
-      Ref: https://arxiv.org/pdf/1905.00220.pdf
+      Ref: https://arxiv.org/pdf/1908.11299.pdf
       Assumes that the A_e and A_mu measurements are uncorrelated (which is 
       likely).
   """
   unc_Ae = 1.e-4
-  unc_Amu = 3.e-4
+  unc_Amu = 1.34e-4
   
   Ae = truth_vals["return-to-Z"]["Ae"]
   Af = truth_vals["return-to-Z"]["Af"]
@@ -229,7 +229,7 @@ def draw_setups(mrr, ax, Ae_name, Af_name, AFB_name, mass_label, draw_colliders=
     arxiv_FCCee = "1601.03849"
     draw_FCCee_TeraZ(ax, scale=scale_FCCee, label="FCCee (Tera-Z), $\epsilon_{{\mu}}$ fixed\nScaled $\\bf{{x{}}}$\narXiv:{}".format(int(scale_FCCee),arxiv_FCCee), zorder=3, ls="--", lw=5.0, edgecolor=colors[5], facecolor='none')
     scale_ILC = 5.
-    arxiv_ILC = "1905.00220"
+    arxiv_ILC = "1908.11299"
     draw_ILC_GigaZ(ax, scale=scale_ILC, label="ILC (Giga-Z)\nScaled $\\bf{{x{}}}$\narXiv:{}".format(int(scale_ILC),arxiv_ILC), zorder=3, ls="--", lw=5.0, edgecolor=colors[6], facecolor='none')
   else:
     ax.plot([],[],color="white",label="\n\n",zorder=3)
