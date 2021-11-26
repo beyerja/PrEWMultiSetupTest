@@ -1,3 +1,4 @@
+from functools import partial
 import logging as log
 import matplotlib.pyplot as plt
 import numpy as np
@@ -35,64 +36,74 @@ truth_vals = {
 
 #-------------------------------------------------------------------------------
 
-def calc_AFB(Ae, Af, ef):
-  """ Calculate AFB from Ae, Af, and epsilon_f.
-  """
-  return 3./8. * (ef + 2 * Ae * Af)
-
-#-------------------------------------------------------------------------------
-
-def Af_unc(Af, AFB, Ae, d_AFB, d_Pol0, d_Ae=0):
+def Af_unc(Af, Ae, d_AFB, d_Pol0=0, d_Ae=0, d_ef=0):
   """ Estimate the uncertainty on Af.
-      Needs Af, AFB, and Ae and the uncertainties:
+      Needs Af, and Ae and the uncertainties:
         d_AFB: AFB uncertainty from fit
         d_Pol0: Uncertainty on each of the individual 0-polarisations
         d_Ae: uncertainty on Ae
+        d_ef: uncertainty on epsilon_f
   """
-  return np.abs(Af) * np.sqrt(
-            (d_AFB/AFB)**2 + ((1-Ae**2)/Ae)**2 * 2 * d_Pol0**2 + (d_Ae/Ae)**2 )
+  return 1./np.abs(Ae) * np.sqrt(
+            (4/3 * d_AFB)**2 + (1/2 * d_ef)**2 + (Af * (1-Ae**2))**2 * 2 * d_Pol0**2 +\
+            (Af * d_Ae)**2 )
   
 #-------------------------------------------------------------------------------
 
-def draw_Af_unc_range(ax, rs, AFB_name, dPol_range, **kwargs):
-  """ Draw the Af uncertainty for a range of polarisation uncertainties.
+def draw_Af_unc_range(ax, rs, AFB_name, unc_range, par_name, **kwargs):
+  """ Draw the Af uncertainty for a range of uncertainties of a given parameter.
   """
   Ae = truth_vals["return-to-Z"]["Ae"]
   Af = truth_vals["return-to-Z"]["Af"]
-  ef = truth_vals["return-to-Z"]["ef"]
-  AFB = calc_AFB(Ae, Af, ef)
 
   i_AFB = rs.par_index(AFB_name)
   unc_AFB = rs.unc_vec_avg[i_AFB]
-
-  unc_Af = Af_unc(Af, AFB, Ae, unc_AFB, dPol_range) * 1e3
   
-  ax.plot(dPol_range, unc_Af, **kwargs)
+  unc_func = partial(Af_unc, Af, Ae, unc_AFB)
+  
+  scale = 1e3
+  if (par_name == "pol"):
+    unc_Af = unc_func(d_Pol0=unc_range) * scale
+  elif (par_name == "Ae"):
+    unc_Af = unc_func(d_Ae=unc_range) * scale
+  elif (par_name == "ef"):
+    unc_Af = unc_func(d_ef=unc_range) * scale
+  else:
+    raise Exception("Unknown unc. par. ", par_name)
+  
+  ax.plot(unc_range, unc_Af, **kwargs)
 
 def Af_uncertainty_plot(mrr, output_dir, mass_range, label):
   """ Draw the Af uncertainties for different unpolarised setups depending on 
       the polarisation uncertainty.
   """
   # Figure basics
-  fig = plt.figure(figsize=(7.5,5.5), tight_layout=True)
+  fig = plt.figure(figsize=(7.5,6.5), tight_layout=True)
   ax = plt.gca()
-  ax.set_xlabel("$\Delta P$ or $\Delta A_e / \sqrt{2}$")
+  ax.set_xlabel("Uncertainty")
   ax.set_ylabel("$\Delta A_{\mu}\,[10^{-3}]$")
   
   rs_0pol_2 = mrr.get(2000, "0pol_LPcnstr", "MuAccFree", "mumu_unpol").result_summary()
   rs_0pol_10 = mrr.get(10000, "0pol_LPcnstr", "MuAccFree", "mumu_unpol").result_summary()
 
-  dPol_range = np.logspace(-5, -2, num=200)
+  unc_range = np.logspace(-4.2, -2, num=200)
+  
+  # Get the colors of the color cycle (to get manual control over them)
+  colors =  plt.rcParams['axes.prop_cycle'].by_key()['color']
   
   AFB_name = "AFB_2f_mu_" + mass_range
-  draw_Af_unc_range(ax, rs_0pol_2, AFB_name, dPol_range, label="$L=2\,$ab$^{-1}$")
-  draw_Af_unc_range(ax, rs_0pol_10, AFB_name, dPol_range, label="$L=10\,$ab$^{-1}$")
+  draw_Af_unc_range(ax, rs_0pol_2, AFB_name, unc_range, "pol", color=colors[0], ls="-" , label="$\Delta P$, $L=2\,$ab$^{-1}$")
+  draw_Af_unc_range(ax, rs_0pol_2, AFB_name, unc_range, "Ae" , color=colors[0], ls="--", label="$\Delta A_e$, $L=2\,$ab$^{-1}$")
+  draw_Af_unc_range(ax, rs_0pol_2, AFB_name, unc_range, "ef" , color=colors[0], ls=":" , label="$\Delta \epsilon_{\mu}$, $L=2\,$ab$^{-1}$")
+  draw_Af_unc_range(ax, rs_0pol_10, AFB_name, unc_range, "pol", color=colors[1], ls="-" , label="$\Delta P$, $L=10\,$ab$^{-1}$")
+  draw_Af_unc_range(ax, rs_0pol_10, AFB_name, unc_range, "Ae" , color=colors[1], ls="--", label="$\Delta A_e$, $L=10\,$ab$^{-1}$")
+  draw_Af_unc_range(ax, rs_0pol_10, AFB_name, unc_range, "ef" , color=colors[1], ls=":" , label="$\Delta \epsilon_{\mu}$, $L=10\,$ab$^{-1}$")
 
   ax.set_xscale('log')
-  ax.set_ylim(0, ax.get_ylim()[1])
-  ax.set_xlim(np.amin(dPol_range), np.amax(dPol_range))
+  ax.set_ylim(0, 15)
+  ax.set_xlim(np.amin(unc_range), np.amax(unc_range))
 
-  legend = plt.legend(title="$e^+e^-\\rightarrow\mu^+\mu^-$ ({})\nunpolarised, $\Delta\epsilon_{{\mu}}=0$".format(label), fontsize=17, title_fontsize=17)
+  legend = plt.legend(title="$e^+e^-\\rightarrow\mu^+\mu^-$ ({})\nunpolarised".format(label), fontsize=17, title_fontsize=17)
 
   # Save the plot in files
   for out_format in ["pdf","png"]:
