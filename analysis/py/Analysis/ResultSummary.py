@@ -64,7 +64,7 @@ class ResultSummary:
   def unc(self, par_name):
     """ Return the uncertainty for the given parameter.
     """
-    return self.unc_vec[self.par_index(par_name)]
+    return self.unc_vec_calc[self.par_index(par_name)]
       
   def fit_unc(self, par_name):
     """ Return the uncertainty for the given parameter.
