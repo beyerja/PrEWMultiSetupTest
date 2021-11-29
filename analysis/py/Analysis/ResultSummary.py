@@ -77,7 +77,7 @@ class ResultSummary:
     np.set_printoptions(linewidth=999999) # Avoid extra line breaks
     out =  "Par. names  : {}\n".format(self.par_names)
     out += "Par. results: {}\n".format(self.par_avg)
-    out += "Calc.    unc: {}\n".format(self.unc_vec)
+    out += "Calc.    unc: {}\n".format(self.unc_vec_calc)
     out += "Avg. fit unc: {}\n".format(self.unc_vec_avg)
     out += "Avg. cor.mat.:\n{}\n".format(self.cor_mat_avg)
     
