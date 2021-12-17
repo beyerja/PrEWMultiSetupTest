@@ -16,7 +16,7 @@ import Setups.WWSetup as IOWWS
 
 #-------------------------------------------------------------------------------
   
-def draw_ellipse(ax, rs, c1_name, c2_name, **kwargs):
+def draw_ellipse(ax, rs, c1_name, c2_name, scale=1., **kwargs):
   """ Draw the uncertainty ellipse from the result summary for the two given 
       couplings.
   """
@@ -24,11 +24,11 @@ def draw_ellipse(ax, rs, c1_name, c2_name, **kwargs):
   i_c2 = rs.par_index(c2_name)
   full_cov = rs.cov_mat_avg
   c1c2_cov = np.array([[full_cov[i_c1,i_c1],full_cov[i_c2,i_c1]],
-                       [full_cov[i_c1,i_c2],full_cov[i_c2,i_c2]]])
+                       [full_cov[i_c1,i_c2],full_cov[i_c2,i_c2]]]) / scale**2
                        
   PS.confidence_ellipse(c1c2_cov, 0, 0, ax, n_std=1.0, **kwargs)
 
-def draw_setups(mrr, ax, c1_name, c2_name, set_labels=False):
+def draw_setups(mrr, ax, c1_name, c2_name, scale=1, set_labels=False):
   """ Plot the uncertainty ellipses between the two given couplings for all 
       collider scenarios.
   """
@@ -53,11 +53,11 @@ def draw_setups(mrr, ax, c1_name, c2_name, set_labels=False):
     ]
     
   # Draw the polarised setups as ellipses
-  draw_ellipse(ax, rs_1pol, c1_name, c2_name, ls="-", lw=5.0, edgecolor=colors[2], facecolor='none', label=labels[0])
-  draw_ellipse(ax, rs_2pol, c1_name, c2_name, ls="-", lw=5.0, edgecolor=colors[1], facecolor='none', label=labels[1])
-  draw_ellipse(ax, rs_2polExt, c1_name, c2_name, ls="-", lw=4.0, edgecolor=colors[0], facecolor='none', label=labels[2])
-  draw_ellipse(ax, rs_0pol_2, c1_name, c2_name, ls="-", lw=5.0, edgecolor=colors[3], facecolor='none', label=labels[3])
-  draw_ellipse(ax, rs_0pol_10, c1_name, c2_name, ls="-", lw=5.0, edgecolor=colors[4], facecolor='none', label=labels[4])
+  draw_ellipse(ax, rs_1pol, c1_name, c2_name, scale=scale, ls="-", lw=5.0, edgecolor=colors[2], facecolor='none', label=labels[0])
+  draw_ellipse(ax, rs_2pol, c1_name, c2_name, scale=scale, ls="-", lw=5.0, edgecolor=colors[1], facecolor='none', label=labels[1])
+  draw_ellipse(ax, rs_2polExt, c1_name, c2_name, scale=scale, ls="-", lw=4.0, edgecolor=colors[0], facecolor='none', label=labels[2])
+  draw_ellipse(ax, rs_0pol_2, c1_name, c2_name, scale=scale, ls="-", lw=5.0, edgecolor=colors[3], facecolor='none', label=labels[3])
+  draw_ellipse(ax, rs_0pol_10, c1_name, c2_name, scale=scale, ls="-", lw=5.0, edgecolor=colors[4], facecolor='none', label=labels[4])
 
 #-------------------------------------------------------------------------------
 
@@ -93,13 +93,14 @@ def TGC_comparison_plot(mrr, output_dir):
   kg_name = "Delta-kappa_gamma"
   lg_name = "Delta-lambda_gamma"
   
-  draw_setups(mrr, ax1, g1_name, kg_name, set_labels=True)
-  draw_setups(mrr, ax2, g1_name, lg_name)
-  draw_setups(mrr, ax3, kg_name, lg_name)
+  scale = 1e-3
+  draw_setups(mrr, ax1, g1_name, kg_name, scale=scale, set_labels=True)
+  draw_setups(mrr, ax2, g1_name, lg_name, scale=scale)
+  draw_setups(mrr, ax3, kg_name, lg_name, scale=scale)
   
-  ax1.text(0.0, 0.003, "$\Delta g_{1}^{Z}$", fontsize=30, ha='center')
-  ax_nouse.text(0.0, 0.0, "$\Delta \kappa_{\gamma}$", fontsize=30, ha='center')
-  ax3.text(0.0035, 0.0, "$\Delta \lambda_{\gamma}$", fontsize=30, ha='center')
+  ax1.text(0.0, 2.8, "$\Delta g_{1}^{Z}\, [10^{-3}]$", fontsize=30, ha='center')
+  ax_nouse.text(0.0, 0.0, "$\Delta \kappa_{\gamma}\, [10^{-3}]$", fontsize=30, ha='center')
+  ax3.text(3.7, 0.0, "$\Delta \lambda_{\gamma}\, [10^{-3}]$", fontsize=30, ha='center')
     
   for ax in [ax1,ax2,ax3]:
     ax.plot([0],[0], marker="X", ls="none", ms=15, color="black")
