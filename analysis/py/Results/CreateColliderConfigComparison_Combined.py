@@ -129,7 +129,7 @@ def difermion_par_plot(mrr, output_dir, mass_range, label, scale):
   # Add markers for the tested scenarios to legend
   handles = markers_to_legend_handles(ax)
   
-  legend = plt.legend(handles=handles, title="$(P_{e^{-}}[\%],P_{e^{+}}[\%])$, $L$", ncol=4, fontsize=17, loc='upper right')
+  legend = plt.legend(handles=handles, title="$(P_{e^{-}}[\%],P_{e^{+}}[\%])$, $L$", ncol=3, fontsize=17, bbox_to_anchor=(0.25, 0.63), loc='lower left')
 
   ax.set_xticks(x + 0.5, minor=True)
   ax.grid(True,which="minor",axis="x",ls='--')
@@ -151,7 +151,7 @@ def TGC_par_plot(mrr, output_dir, scale):
   plt.ylabel('Uncertainty [{:.0E}]'.format(Decimal(scale)), size='large')
   ax = plt.gca()
   ax.set_xlim(0,x[-1])
-  ax.set_ylim(0,25)
+  ax.set_ylim(0,30)
 
   par_names = np.array([ 
     "Delta-g1Z", "Delta-kappa_gamma", "Delta-lambda_gamma" ])
@@ -175,20 +175,19 @@ def TGC_par_plot(mrr, output_dir, scale):
   plt.close(fig)
 
 def WW_par_plot(mrr, output_dir, scale):
-  fig = plt.figure(figsize=(12,7), tight_layout=True)
+  fig = plt.figure(figsize=(8,7), tight_layout=True)
   
-  x = np.arange(4)+0.5
-  x_ticks = [ "$\sigma_0/\sigma_0^{SM}(W^{-})$", "$\sigma_0/\sigma_0^{SM}(W^{+})$", "$A_{LR} (W^{-})$", "$A_{LR} (W^{+})$" ]
+  x = np.arange(2)+0.5
+  x_ticks = [ "$\sigma_0/\sigma_0^{SM}(W^{-})$", "$\sigma_0/\sigma_0^{SM}(W^{+})$" ]
   plt.xticks(x, x_ticks, size='large')
   
   plt.xlabel('$WW$ cross section parameters', size='large')
   plt.ylabel('Uncertainty [{:.0E}]'.format(Decimal(scale)), size='large')
   ax = plt.gca()
   ax.set_xlim(0,x[-1])
-  ax.set_ylim(0,60)
+  ax.set_ylim(0,80)
 
-  par_names = np.array([ "ScaleTotChiXS_WW_muminus", "ScaleTotChiXS_WW_muplus", 
-                         "DeltaA_WW_muminus", "DeltaA_WW_muplus" ])
+  par_names = np.array(["ScaleTotChiXS_WW_muminus", "ScaleTotChiXS_WW_muplus"])
   y_fct = make_fit_function(par_names, scale)
   y_fcts = [y_fct for i in range(5)]
 
@@ -197,7 +196,7 @@ def WW_par_plot(mrr, output_dir, scale):
   # Add markers for the tested scenarios to legend
   handles = markers_to_legend_handles(ax)
   
-  legend = plt.legend(handles=handles, title="$(P_{e^{-}}[\%],P_{e^{+}}[\%])$, $L$", ncol=1, fontsize=17)
+  legend = plt.legend(handles=handles, title="$(P_{e^{-}}[\%],P_{e^{+}}[\%])$, $L$", ncol=2, fontsize=17)
 
   ax.set_xticks(x + 0.5, minor=True)
   ax.grid(True,which="minor",axis="x",ls='--')
@@ -249,14 +248,14 @@ def nuisance_par_plot(mrr, output_dir, scale):
   constr_marker_dummy = plt.scatter([], [], color="gold", ec="black", marker='v', linestyle='-', s=120, label=r'Constraints')
   handles.append(constr_marker_dummy) 
   
-  legend = plt.legend(handles=handles, title="$(P_{e^{-}}[\%],P_{e^{+}}[\%])$, $L$", ncol=6, fontsize=17, loc='upper center')
+  legend = plt.legend(handles=handles, title="$(P_{e^{-}}[\%],P_{e^{+}}[\%])$, $L$", ncol=5, fontsize=17, loc='upper center')
   
   ax.set_xticks(x + 0.5, minor=True)
   ax.grid(True,which="minor",axis="x",ls='--')
   
   textstr='x10'
-  ax.text(0.8, 0.25, textstr, transform=ax.transAxes, verticalalignment='top')
-  ax.text(0.9, 0.4, textstr, transform=ax.transAxes, verticalalignment='top')
+  ax.text(0.8, 0.15, textstr, transform=ax.transAxes, verticalalignment='top')
+  ax.text(0.91, 0.22, textstr, transform=ax.transAxes, verticalalignment='top')
   
   for out_format in ["pdf","png"]:
     format_dir = "{}/{}".format(output_dir,out_format)
