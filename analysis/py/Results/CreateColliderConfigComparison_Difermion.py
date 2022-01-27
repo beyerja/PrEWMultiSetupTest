@@ -19,6 +19,46 @@ import Setups.RunSetup as IORS
 
 #-------------------------------------------------------------------------------
 
+# # True values of the difermion parameters
+# truth_vals = {
+#   "return-to-Z": {
+#     "sigma0": 6621.4,
+#     "Ae": 0.21360014,
+#     "Af": 0.20281099,
+#     "ef": 0.01580906,
+#     "k0": 0.07471141,
+#     "dk": 0.00059199,
+#   },
+#   r"high-$\sqrt{s*}$": {
+#     "sigma0": 7250.0,
+#     "Ae" : 0.11251847,
+#     "Af" : 0.03217479,
+#     "ef" : 1.42594481,
+#     "k0" : 0.00033356,
+#     "dk" : 0.00031470,
+#   },
+#   "LEP/SLC": {
+#     "Ae" : 0.1515,
+#     "Af" : 0.1515,
+#     "ef" : 0.0
+#   }
+# }
+# 
+# def AFB_at_mass(mass_label):
+#   """ Calculate the AFB value for the given mass label.
+#   """
+#   Ae = truth_vals[mass_label]["Ae"]
+#   Af = truth_vals[mass_label]["Af"]
+#   ef = truth_vals[mass_label]["ef"]
+#   return 3./8. * (ef + 2 * Ae * Af)
+# 
+# def par2f_value(par,label):
+#   """ Return the difermion parameter value at the given COM energy. 
+#   """
+#   return AFB_at_mass(label) if par == "AFB" else truth_vals[label][par]
+
+#-------------------------------------------------------------------------------
+
 def draw_setups(mrr, ax, x, y_fcts):
   """ This part should be common for all physics and nuisance histograms:
       The drawing of the different setups
@@ -98,7 +138,7 @@ def markers_to_legend_handles(ax):
 #-------------------------------------------------------------------------------
 
 def make_fit_function(x_par_names, par_norm):
-  return lambda rs: np.array([rs.fit_unc(par) if par in rs.par_names else -0.3 for par in x_par_names]) / par_norm
+  return lambda rs: np.array([rs.fit_unc(par) if par in rs.par_names else -3e-4 for par in x_par_names]) / par_norm
 
 #-------------------------------------------------------------------------------
 
@@ -118,6 +158,11 @@ def difermion_par_plot(mrr, output_dir, mass_range, label, scale):
   par_base_names = np.array([
    "s0_2f_mu", "Ae_2f_mu", "Af_2f_mu", "ef_2f_mu", "AFB_2f_mu", "k0_2f_mu", "dk_2f_mu"])
   par_names = np.array(["{}_{}".format(par,mass_range) for par in par_base_names])
+  
+  # par_norm = scale * np.array([1.0] + [par2f_value(par,label) for par in ["Ae", "Af", "ef", "AFB"]] + [1.0, 1.0])
+  # par_norm[3] *= 10. if label == "return-to-Z" else .1`
+  # y_fct_pol = make_fit_function(par_names, par_norm)
+  
   y_fct_pol = make_fit_function(par_names, scale)
   y_fct_unpol = lambda rs: y_fct_pol(rs) - 10 * np.any([par_base_names == "Ae_2f_mu",par_base_names == "Af_2f_mu",par_base_names == "dk_2f_mu"], axis=0)
   y_fcts = [ y_fct_pol, y_fct_pol, y_fct_pol, y_fct_unpol, y_fct_unpol ]
@@ -131,6 +176,7 @@ def difermion_par_plot(mrr, output_dir, mass_range, label, scale):
 
   ax.set_xticks(x + 0.5, minor=True)
   ax.grid(True,which="minor",axis="x",ls='--')
+  # ax.set_ylim(0,ax.get_ylim()[1])
 
   for out_format in ["pdf","png"]:
     format_dir = "{}/{}".format(output_dir,out_format)
