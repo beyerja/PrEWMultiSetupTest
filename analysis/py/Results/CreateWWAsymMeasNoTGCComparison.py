@@ -20,15 +20,15 @@ def get_comb_asymm_unc(rs):
   """ TGC impact of asymmetry is symmetric for mu+ and mu-, so that the relevant
       uncertainty is the combined uncertainty.
   """
-  unc_M = rs.fit_unc("DeltaA_WW_muminus")
-  unc_P = rs.fit_unc("DeltaA_WW_muplus")
-  return 1/2 * np.sqrt( unc_M**2 + unc_P**2 )
+  return rs.fit_unc("DeltaA_WW_muminus")
+  # unc_M = rs.fit_unc("DeltaA_WW_muminus")
+  # unc_P = rs.fit_unc("DeltaA_WW_muplus")
+  # return 1/2 * np.sqrt( unc_M**2 + unc_P**2 )
 
 def WW_par_plot(mrr, output_dir, scale):
   fig = plt.figure(tight_layout=True, figsize=(8.8,6.5))
   ax = plt.gca()
   
-
   # colors =  plt.rcParams['axes.prop_cycle'].by_key()['color']
   
   x = np.arange(5)+0.5
@@ -39,9 +39,9 @@ def WW_par_plot(mrr, output_dir, scale):
               "$10$ab$^{-1}$\n$(0,0)$" )
   plt.xticks(x, x_ticks, size='large')
   ax.set_xlim(0,x[-1]+0.5)
-  ax.set_ylim(0,3.5)
-  # ax.set_xlabel('$WW$ cross section parameters', size='large')
-  ax.set_ylabel('$\Delta A_{{comb.}}$ [{:.0E}]'.format(Decimal(scale)), size='large')
+  ax.set_ylim(0,5)
+  ax.set_ylabel('$\Delta A_{{LR}}(W^-)$ [{:.0E}]'.format(Decimal(scale)), size='large')
+  # ax.set_ylabel('$\Delta A_{{comb.}}$ [{:.0E}]'.format(Decimal(scale)), size='large')
   
   y_polfree = np.array([
     get_comb_asymm_unc(rs) for rs in (
