@@ -188,23 +188,25 @@ def draw_FCCee_TeraZ(ax, scale=1.0, use_taupol=True, **kwargs):
       Either show only band from AFBmu measurement or show ellipse that also
       uses Ae from tau polarisation measurement.
   
-      AFB(mumu) ref: https://arxiv.org/abs/1601.03849
-      Ae ref:
-        FCC-ee # Z-pole tautau events (= # mumu events): 
-          https://link.springer.com/article/10.1140/epjp/s13360-021-01894-y
-        LEP # Z-pol tautau events & Ae precision from tau polarisation:
-          https://arxiv.org/abs/hep-ex/0312023
+      FCC-ee ref: https://link.springer.com/article/10.1140/epjst/e2019-900045-4
+      LEP # Z-pol tautau events & Ae precision from tau polarisation:
+        https://arxiv.org/abs/hep-ex/0312023
       
-      Assumes an AFB measurement in the mumu channel of 4 * 10^-6,
+      Assumes an AFB measurement in the mumu channel of
+        3e-6 (stat) (+) 9e-6 (syst from COM energy measurement)
       and an independent measurement of Ae from tau polarisation.
       For the Ae uncertainty I take the LEP uncertainty on Ae from tau
       polarisation (~0.005) and devide it by the increased statistics (10^7 more
       Z events at FCC-ee Tera-Z).
   """
-  unc_AFB = 5.e-6
+  unc_AFB = np.sqrt((3e-6)**2 + (9e-6)**2)
   
   if use_taupol:
-    N_Ztatau_FCCee = 1.7e11 # 1.7e11 tautau events
+    N_Ztatau_FCCee = 1.5e11 # 1.7e11 tautau events
+    # From: https://indico.fnal.gov/event/51940/contributions/232053/attachments/151016/194982/Alcaraz_EW-FCCee_EF04_20Jan2022.pdf
+    # => dAe ~ 2.1e-5
+    # LEP extrapolation gives: 9.192921402990923e-06
+    # ~> LEP extrapolation seems fair, only slightly optimistic
     unc_Ae = Ae_from_taupol_LEPextrap(N_Ztatau_FCCee)
     
     draw_unpol_ellipse(ax, unc_AFB, unc_Ae, "LEP/SLC", scale, **kwargs)
@@ -222,13 +224,30 @@ def draw_ILC_GigaZ(ax, scale=1.0, mumu_only=False, **kwargs):
       Assumes that the A_e and A_mu measurements are uncorrelated (which is 
       likely).
   """
-  unc_Ae = np.sqrt(69.91/3.366) * 3e-5 if mumu_only else 1.e-4
-  unc_Amu = 1.34e-4
+  # Determine the Ae uncertainty
+  # If all 2f used, assume Ae to be limited by polarisation uncertainty 
+  # (5e-4 relative), else assume statistically limited (scaled from 3e-5 
+  # absolute of hadrons)
+  Ae_true = truth_vals["LEP/SLC"]["Ae"]
+  unc_Ae = np.sqrt(69.91/3.366) * 3e-5 if mumu_only else 5e-4 * Ae_true
+  
+  # Assume that Amu will be limited by polarisation uncertainty
+  # (this is a bit questionable, I'll stick with it here, statistics probably 
+  # worse)
+  Amu_true = truth_vals["LEP/SLC"]["Af"]
+  unc_Amu = 5e-4 * Amu_true
   
   # Transform the covariance matrix from Ae:AFB to Ae:Amu
   cov_AeAf = np.array([[unc_Ae**2, 0.],
                        [0.,        unc_Amu**2]])
-                       
+  
+  # Also include the contribution of a GigaZ tau polarisation measurement
+  # -> Contributes only an additional Ae measurement with rel. 2e-3 unc.
+  if not mumu_only:                 
+    N_tautau = 1.6e8
+    unc_Ae_taupol = Ae_from_taupol_LEPextrap(N_tautau)
+    cov_AeAf = add_indep_Ae_to_cov(cov_AeAf, unc_Ae_taupol)
+                  
   # Transform to the covariance matrix on the relative Ae/Ae_true : Amu/Amu_true
   cov_AeAf = cov_AeAf * scale**2
   
@@ -373,7 +392,7 @@ def draw_setups_withZpoleRuns(mrr, ax, Ae_name, Af_name, AFB_name, mass_label,
   FCCee_kwargs_with_taup = { "label":FCCee_label, "zorder":3, "ls":"--", "lw":5.0, "edgecolor":colors[5], "facecolor":'none'}
   FCCee_kwargs = FCCee_kwargs_mumu_only if mumu_only else FCCee_kwargs_with_taup
   draw_FCCee_TeraZ(ax, scale=scale_FCCee, use_taupol=not mumu_only, **FCCee_kwargs)
-  scale_ILC = 2.
+  scale_ILC = 5.
   arxiv_ILC = "1908.11299"
   draw_ILC_GigaZ(ax, scale=scale_ILC, mumu_only=mumu_only, label="ILC (Giga-Z)\nScaled $\\bf{{x{}}}$\narXiv:{}".format(int(scale_ILC),arxiv_ILC), zorder=3, ls="--", lw=5.0, edgecolor=colors[6], facecolor='none')
     
