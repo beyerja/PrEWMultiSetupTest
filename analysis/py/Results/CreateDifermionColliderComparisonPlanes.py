@@ -60,14 +60,17 @@ def AFB_at_mass(mass_label):
 
 #-------------------------------------------------------------------------------
 
-def Ae_from_taupol_LEPextrap(N_tautau):
+def Ae_from_taupol_LEPextrap(N_tautau, mass_label="LEP/SLC"):
   """ Extrapolate the Ae uncertainty from the tau polarisation measurement at 
       LEP to a measurement with a different number of tau pair production 
       events.
+      The relative uncertainty is extrapolated, and scaled to the relevant 
+      parameter values.
   """
   unc_Ae_LEP = 5.e-3
   N_Ztatau_LEP = 1724e3 / 3 # 1724e3 events on all charged lepton species
-  return unc_Ae_LEP / np.sqrt( N_tautau / N_Ztatau_LEP )
+  par_scaling = truth_vals[mass_label]["Ae"]/truth_vals["LEP/SLC"]["Ae"]
+  return unc_Ae_LEP / np.sqrt( N_tautau / N_Ztatau_LEP ) * par_scaling
       
 #-------------------------------------------------------------------------------
 
@@ -124,7 +127,9 @@ def draw_ellipse(ax, rs, Ae_name, Af_name, mass_label, mumu_only=True,
     # Add the Ae measurement from tau polarisation
     lumi = rs.par_avg[rs.par_index("Lumi")] # Get the lumi of the setup
     N_tautau = lumi * truth_vals[mass_label]["sigma0"]
-    unc_Ae_taupol = Ae_from_taupol_LEPextrap(N_tautau)
+    # TODO HERE: Correct for different Ae val
+    unc_Ae_taupol = Ae_from_taupol_LEPextrap(N_tautau, mass_label)
+    
     AeAf_cov = add_indep_Ae_to_cov(AeAf_cov, unc_Ae_taupol)
                        
   AeAf_cov = cov_to_relative(AeAf_cov, mass_label)
@@ -278,7 +283,9 @@ def draw_unpol_real(ax, rs, AFB_name, mass_label, **kwargs):
   i_Lumi = rs.par_index("Lumi")
   lumi = rs.par_avg[i_Lumi]
   N_tautau_unpol = lumi * truth_vals[mass_label]["sigma0"]
-  unc_Ae = Ae_from_taupol_LEPextrap(N_tautau_unpol)
+  
+  # TODO HERE: Correct for different Ae val
+  unc_Ae = Ae_from_taupol_LEPextrap(N_tautau_unpol, mass_label)
   
   draw_unpol_ellipse(ax, unc_AFB, unc_Ae, mass_label, **kwargs)
   
@@ -385,7 +392,7 @@ def draw_setups_withZpoleRuns(mrr, ax, Ae_name, Af_name, AFB_name, mass_label,
     draw_unpol_real(ax, rs_0pol_2, AFB_name, mass_label, label=label_2, ls="-", lw=5.0, edgecolor=colors[3], facecolor='none', zorder=2)
     draw_unpol_real(ax, rs_0pol_10, AFB_name, mass_label, label=label_10, ls="-", lw=5.0, edgecolor=colors[4], facecolor='none', zorder=2)
   
-  scale_FCCee = 20.
+  scale_FCCee = 5.
   arxiv_FCCee = "1601.03849"
   FCCee_label="FCCee (Tera-Z)\nScaled $\\bf{{x{}}}$\narXiv:{}".format(int(scale_FCCee),arxiv_FCCee)
   FCCee_kwargs_mumu_only = { "label":FCCee_label, "zorder":3, "ls":"--", "lw":5.0, "color":colors[5]}
