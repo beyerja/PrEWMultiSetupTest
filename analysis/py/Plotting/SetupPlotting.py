@@ -58,7 +58,7 @@ def plot_parameters(res_summary, output_dir, extensions=["pdf","png"]):
       fig.savefig("{}/{}/hist_{}.{}".format(output_dir,ext,res_summary.par_names[p],ext))
     plt.close(fig)
     
-def plot_cor_matrix(cor_matrix, par_names, h_name, output_dir, 
+def plot_cor_matrix(cor_matrix, par_names, h_name, output_dir, write_values,
                     extensions=["pdf","png"]):
   """ Plot the correlation matrix of a single setup run.
   """
@@ -74,6 +74,14 @@ def plot_cor_matrix(cor_matrix, par_names, h_name, output_dir,
   im_cor = ax.imshow(cor_matrix,interpolation='none',cmap='PRGn')
   cb_cor = fig.colorbar(im_cor, ax=ax) # Show what the colors mean
   im_cor.set_clim(-1, 1); # Correlations are between -1 and +1
+  
+  # Write the values on the plot if requested
+  if write_values:
+    h_name += "_wValues"
+    w_ax = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted()).width * fig.dpi
+    value_fs = w_ax/n_pars/4
+    for (j,i),label in np.ndenumerate(np.around(cor_matrix,decimals=1)):
+      ax.text(i,j,label,ha='center',va='center',fontsize=value_fs)
 
   # We want to show all ticks...
   ax.set_xticks(np.arange(n_pars))
@@ -94,19 +102,21 @@ def plot_cor_matrix(cor_matrix, par_names, h_name, output_dir,
     fig.savefig("{}/{}/{}.{}".format(output_dir,ext,h_name,ext))
   plt.close(fig)
 
-def plot_cor_matrix_avg(res_summary, output_dir, extensions=["pdf","png"]):
+def plot_cor_matrix_avg(res_summary, output_dir, write_values=False, 
+                        extensions=["pdf","png"]):
   """ Plot the correlation matrix of a single setup run, calculated by averaging
       over the correlation matrices of all fits.
   """
   plot_cor_matrix(res_summary.cor_mat_avg, res_summary.par_names, 
-                  "hist_cor_avg", output_dir, extensions)
+                  "hist_cor_avg", output_dir, write_values, extensions)
     
-def plot_cor_matrix_calc(res_summary, output_dir, extensions=["pdf","png"]):
+def plot_cor_matrix_calc(res_summary, output_dir, write_values=False,
+                         extensions=["pdf","png"]):
   """ Plot the correlation matrix of a single setup run, calculated from the
       final fit result points.
   """
   plot_cor_matrix(res_summary.cor_mat_calc, res_summary.par_names, 
-                  "hist_cor_calc", output_dir, extensions)
+                  "hist_cor_calc", output_dir, write_values, extensions)
 
 def plot_nll_ndf(res_summary, output_dir, extensions=["pdf","png"]):
   """ Plot the negative log likelihood (/ degrees of freedom) for a single setup 
@@ -213,8 +223,9 @@ def plot_res_summary(res_summary, output_dir, extensions=["pdf","png"]):
   """ Create all summary and check plots for the given result summary.
   """
   plot_parameters(res_summary, output_dir, extensions)
-  plot_cor_matrix_avg(res_summary, output_dir, extensions)
-  plot_cor_matrix_calc(res_summary, output_dir, extensions)
+  plot_cor_matrix_avg(res_summary, output_dir, extensions=extensions)
+  plot_cor_matrix_avg(res_summary, output_dir, write_values=True, extensions=extensions)
+  plot_cor_matrix_calc(res_summary, output_dir, extensions=extensions)
   plot_nll_ndf(res_summary, output_dir, extensions)
   plot_cov_status(res_summary, output_dir, extensions)
   plot_min_status(res_summary, output_dir, extensions)
