@@ -48,13 +48,12 @@ def plot_parameters(res_summary, output_dir, extensions=["pdf","png"]):
   """ Create the summary plots for the all individual parameters.
   """
   n_pars = len(res_summary.par_names)
-  for ext in extensions:
-    IOSH.create_dir("{}/{}".format(output_dir,ext))
     
   for p in range(n_pars):
     fig, ax = plt.subplots(figsize=(8, 6.5),tight_layout=True)
     plot_parameter(ax,res_summary,p)
     for ext in extensions:
+      IOSH.create_dir("{}/{}".format(output_dir,ext))
       fig.savefig("{}/{}/hist_{}.{}".format(output_dir,ext,res_summary.par_names[p],ext))
     plt.close(fig)
     
@@ -99,6 +98,7 @@ def plot_cor_matrix(cor_matrix, par_names, h_name, output_dir, write_values,
   ax.set_title("Average correlation matrix")
   fig.tight_layout()
   for ext in extensions:
+    IOSH.create_dir("{}/{}".format(output_dir,ext))
     fig.savefig("{}/{}/{}.{}".format(output_dir,ext,h_name,ext))
   plt.close(fig)
 
@@ -153,6 +153,7 @@ def plot_nll_ndf(res_summary, output_dir, extensions=["pdf","png"]):
   ax.legend(title=ndof_str)
 
   for ext in extensions:
+    IOSH.create_dir("{}/{}".format(output_dir,ext))
     fig.savefig("{}/{}/hist_nll_ndf.{}".format(output_dir,ext,ext))
   plt.close(fig)
   
@@ -176,6 +177,7 @@ def plot_cov_status(res_summary, output_dir, extensions=["pdf","png"]):
   plt.setp(ax.get_xticklabels(), rotation=45, ha="right", rotation_mode="anchor")
 
   for ext in extensions:
+    IOSH.create_dir("{}/{}".format(output_dir,ext))
     fig.savefig("{}/{}/hist_cov_status.{}".format(output_dir,ext,ext))
   plt.close(fig)
   
@@ -198,6 +200,7 @@ def plot_min_status(res_summary, output_dir, extensions=["pdf","png"]):
   plt.setp(ax.get_xticklabels(), rotation=45, ha="right", rotation_mode="anchor")
 
   for ext in extensions:
+    IOSH.create_dir("{}/{}".format(output_dir,ext))
     fig.savefig("{}/{}/hist_min_status.{}".format(output_dir,ext,ext))
   plt.close(fig)
   
@@ -216,6 +219,7 @@ def plot_fit_calls(res_summary, output_dir, extensions=["pdf","png"]):
   ax.legend()
 
   for ext in extensions:
+    IOSH.create_dir("{}/{}".format(output_dir,ext))
     fig.savefig("{}/{}/hist_n_stats.{}".format(output_dir,ext,ext))
   plt.close(fig)
   
