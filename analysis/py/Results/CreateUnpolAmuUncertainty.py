@@ -36,16 +36,16 @@ truth_vals = {
 
 #-------------------------------------------------------------------------------
 
-def Af_unc(Af, Ae, d_AFB, d_Pol0=0, d_Ae=0, d_ef=0):
+def Af_unc(Af, Ae, d_AFB, d_Poleff=0, d_Ae=0, d_ef=0):
   """ Estimate the uncertainty on Af.
       Needs Af, and Ae and the uncertainties:
         d_AFB: AFB uncertainty from fit
-        d_Pol0: Uncertainty on each of the individual 0-polarisations
+        d_Poleff: Uncertainty on the effective polarisation
         d_Ae: uncertainty on Ae
         d_ef: uncertainty on epsilon_f
   """
   return 1./np.abs(Ae) * np.sqrt(
-            (4/3 * d_AFB)**2 + (1/2 * d_ef)**2 + (Af * (1-Ae**2))**2 * 2 * d_Pol0**2 +\
+            (4/3 * d_AFB)**2 + (1/2 * d_ef)**2 + (Af * (1-Ae**2))**2 * d_Poleff**2 +\
             (Af * d_Ae)**2 )
   
 #-------------------------------------------------------------------------------
@@ -63,7 +63,7 @@ def draw_Af_unc_range(ax, rs, AFB_name, unc_range, par_name, **kwargs):
   
   scale = 1e3
   if (par_name == "pol"):
-    unc_Af = unc_func(d_Pol0=unc_range) * scale
+    unc_Af = unc_func(d_Poleff=unc_range) * scale
   elif (par_name == "Ae"):
     unc_Af = unc_func(d_Ae=unc_range) * scale
   elif (par_name == "ef"):
