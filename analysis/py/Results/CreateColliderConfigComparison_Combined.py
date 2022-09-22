@@ -112,7 +112,7 @@ def difermion_par_plot(mrr, output_dir, mass_range, label, scale):
   plt.xticks(x, x_ticks, size='large')
   
   plt.xlabel('$e^+e^- \\rightarrow \mu\mu$ parameters at {}'.format(label), size='large')
-  plt.ylabel('Uncertainty [{:.0E}]'.format(Decimal(scale)), size='large')
+  plt.ylabel('Abs. uncertainty [{:.0E}]'.format(Decimal(scale)), size='large')
   ax = plt.gca()
   ax.set_xlim(0,x[-1])
   ax.set_ylim(0,35)
@@ -148,7 +148,7 @@ def TGC_par_plot(mrr, output_dir, scale):
   plt.xticks(x, x_ticks, size='large')
   
   plt.xlabel('Triple Gauge Couplings', size='large')
-  plt.ylabel('Uncertainty [{:.0E}]'.format(Decimal(scale)), size='large')
+  plt.ylabel('Abs. uncertainty [{:.0E}]'.format(Decimal(scale)), size='large')
   ax = plt.gca()
   ax.set_xlim(0,x[-1])
   ax.set_ylim(0,30)
@@ -182,7 +182,7 @@ def WW_par_plot(mrr, output_dir, scale):
   plt.xticks(x, x_ticks, size='large')
   
   plt.xlabel('$WW$ cross section parameters', size='large')
-  plt.ylabel('Uncertainty [{:.0E}]'.format(Decimal(scale)), size='large')
+  plt.ylabel('Abs. uncertainty [{:.0E}]'.format(Decimal(scale)), size='large')
   ax = plt.gca()
   ax.set_xlim(0,x[-1])
   ax.set_ylim(0,80)
@@ -208,7 +208,7 @@ def WW_par_plot(mrr, output_dir, scale):
   plt.close(fig)
 
 def nuisance_par_plot(mrr, output_dir, scale):
-  fig = plt.figure(figsize=(25,7), tight_layout=True)
+  fig = plt.figure(figsize=(20,7), tight_layout=True)
   
   x = np.arange(9)+0.5
   x_ticks = [ r"$L$", r"$P_{e^-}^{-}$", r"$P_{e^-}^{+}$", r"(*)$P_{e^-}^{0}$", 
@@ -217,7 +217,7 @@ def nuisance_par_plot(mrr, output_dir, scale):
   plt.xticks(x, x_ticks, size='large')
   
   plt.xlabel('Nuisance parameters', size='large')
-  plt.ylabel('Rel. (*Abs.) Uncertainty [{:.0E}]'.format(Decimal(scale)), size='large')
+  plt.ylabel('Rel. (*Abs.) uncertainty [{:.0E}]'.format(Decimal(scale)), size='large')
   ax = plt.gca()
   ax.set_xlim(0,x[-1])
   ax.set_ylim(0,35)
