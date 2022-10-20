@@ -16,6 +16,38 @@ import Setups.RunSetup as IORS
 
 #-------------------------------------------------------------------------------
 
+ALPHA2POLEXT=0.9 #0.07 # 0.9
+ALPHA2POL=1.0 # 1.0
+ALPHA1POL=1.0 # 1.0
+ALPHA0POL2=1.0
+ALPHA0POL10=1.0
+
+ALPHAAEFIXED=0.07
+
+#-------------------------------------------------------------------------------
+
+def make_legtext_transparent(ax):
+  leg = ax.get_legend()
+  for t in range(len(leg.texts)):
+    txt = leg.texts[t].get_text()
+    if (txt == '(80/0,30/0), 2ab$^{-1}$'):
+      leg.texts[t].set_alpha(ALPHA2POLEXT)
+    if (txt == '(80,30), $2$ab$^{-1}$'):
+      leg.texts[t].set_alpha(ALPHA2POL)
+    if (txt == '(80,0), $2$ab$^{-1}$'):
+      leg.texts[t].set_alpha(ALPHA1POL)
+    if '(0,0)' in txt:
+      alpha=1.0
+      if '2ab$^{-1}$' in txt:
+        alpha=ALPHA0POL2
+      if '10ab$^{-1}$' in txt:
+        alpha=ALPHA0POL10
+      if 'A_e' in txt:
+        alpha=min(alpha,ALPHAAEFIXED)
+      leg.texts[t].set_alpha(alpha)
+      
+#-------------------------------------------------------------------------------
+
 # True values of the difermion parameters
 truth_vals = {
   "return-to-Z": {
@@ -424,16 +456,16 @@ def draw_setups(mrr, ax, Ae_name, Af_name, AFB_name, mass_label):
   set_ylim(ax, rs_1pol, rs_0pol_2, Ae_name, Af_name, AFB_name, mass_label)
   
   # Draw the polarised setups as ellipses
-  draw_ellipse(ax, rs_1pol, Ae_name, Af_name, mass_label, ls="-", lw=5.0, edgecolor=colors[2], facecolor='none', label="(80,0), 2ab$^{-1}$", zorder=2)
-  draw_ellipse(ax, rs_2pol, Ae_name, Af_name, mass_label, ls="-", lw=5.0, edgecolor=colors[1], facecolor='none', label="(80,30), 2ab$^{-1}$", zorder=2)
-  draw_ellipse(ax, rs_2polExt, Ae_name, Af_name, mass_label, ls="-", lw=3.5, alpha=0.9, edgecolor=colors[0], facecolor='none', label="(80/0,30/0), 2ab$^{-1}$", zorder=2)
+  draw_ellipse(ax, rs_1pol, Ae_name, Af_name, mass_label, ls="-", lw=5.0, alpha=ALPHA1POL, edgecolor=colors[2], facecolor='none', label="(80,0), 2ab$^{-1}$", zorder=2)
+  draw_ellipse(ax, rs_2pol, Ae_name, Af_name, mass_label, ls="-", lw=5.0, alpha=ALPHA2POL, edgecolor=colors[1], facecolor='none', label="(80,30), 2ab$^{-1}$", zorder=2)
+  draw_ellipse(ax, rs_2polExt, Ae_name, Af_name, mass_label, ls="-", lw=3.5, alpha=ALPHA2POLEXT, edgecolor=colors[0], facecolor='none', label="(80/0,30/0), 2ab$^{-1}$", zorder=2)
 
   # Draw optimistic and less optimistic limits for the unpolarised setups
-  draw_unpol_opt(ax, rs_0pol_2, AFB_name, mass_label, color=colors[3], lw=5, capsize=15, capthick=5, alpha=0.9, label="(0,0), 2ab$^{-1}$", ls='none')
-  draw_unpol_opt(ax, rs_0pol_10, AFB_name, mass_label, color=colors[4], lw=5, capsize=15, capthick=5, alpha=0.9, label="(0,0), 10ab$^{-1}$", ls='none')
+  draw_unpol_opt(ax, rs_0pol_2, AFB_name, mass_label, color=colors[3], lw=5, alpha=min(ALPHA0POL2,ALPHAAEFIXED, 0.9), capsize=15, capthick=5, label="(0,0), 2ab$^{-1}$", ls='none')
+  draw_unpol_opt(ax, rs_0pol_10, AFB_name, mass_label, color=colors[4], lw=5, alpha=min(ALPHA0POL10,ALPHAAEFIXED, 0.9), capsize=15, capthick=5, label="(0,0), 10ab$^{-1}$", ls='none')
   
-  draw_unpol_fit_range(ax, rs_0pol_2, AFB_name, mass_label, lw=5.0, color=colors[3], label="(0,0), 2ab$^{-1}$, \n{$\epsilon_{\mu}$, $P$} fixed", zorder=1)
-  draw_unpol_fit_range(ax, rs_0pol_10, AFB_name, mass_label, lw=5.0, color=colors[4], label="(0,0), 10ab$^{-1}$, \n{$\epsilon_{\mu}$, $P$} fixed", zorder=1)
+  draw_unpol_fit_range(ax, rs_0pol_2, AFB_name, mass_label, lw=5.0, alpha=ALPHA0POL2, color=colors[3], label="(0,0), 2ab$^{-1}$, \n{$\epsilon_{\mu}$, $P$} fixed", zorder=1)
+  draw_unpol_fit_range(ax, rs_0pol_10, AFB_name, mass_label, lw=5.0, alpha=ALPHA0POL10, color=colors[4], label="(0,0), 10ab$^{-1}$, \n{$\epsilon_{\mu}$, $P$} fixed", zorder=1)
   
   # Reset some sensible axis limits
   set_ylim(ax, rs_1pol, rs_0pol_2, Ae_name, Af_name, AFB_name, mass_label)
@@ -453,12 +485,14 @@ def reorder_legend_handles(ax, draw_colliders=False, mumu_only=True):
   """ Reorder the legend handles to make the legend look more orderly.
   """
   handles, _ = ax.get_legend_handles_labels()
+  print(ax.get_legend_handles_labels())
   if (len(handles) == 8) and draw_colliders and mumu_only:
     reordering = [4,5,6,0,1,3,7,2]
   elif (len(handles) == 8) and draw_colliders and not mumu_only:
     reordering = [1,2,3,4,5,0,7,6]
   elif (len(handles) == 8) and not draw_colliders:
-    reordering = [3,4,5,0,1,6,7,2]
+    # reordering = [3,4,5,0,1,6,7,2]
+    reordering = [0,1,2,3,4,6,7,5]
   else:
     raise Exception("Not prepared for {} labels.".format(len(handles)))
     
@@ -508,6 +542,8 @@ def AeAf_comparison_plot(mrr, output_dir, mass_range, label, draw_colliders=Fals
   handles = reorder_legend_handles(ax, draw_colliders, mumu_only)
   legend = plt.legend(handles=handles, title="$(P_{{e^-}}[\\%],P_{{e^+}}[\\%])$, $L$", ncol=1, fontsize=20, title_fontsize=24, bbox_to_anchor=(1.02, .0), loc='lower left')
   ax.set_title(legend_title(label, draw_colliders, mumu_only))
+  if not draw_colliders:
+    make_legtext_transparent(ax)
 
   # Reduce the number of axis ticks
   ax.locator_params(axis='x', nbins=4)
